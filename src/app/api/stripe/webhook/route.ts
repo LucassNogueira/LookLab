@@ -5,7 +5,7 @@ import { stripe } from "@/lib/stripe";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { SUBSCRIPTION_TIERS, SubscriptionTier } from "@/lib/subscription-tiers";
+import { SubscriptionTier } from "@/lib/subscription-tiers";
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     if (event.type === "checkout.session.completed") {
-        const subscription = await stripe.subscriptions.retrieve(session.subscription as string) as any;
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
 
         if (!session?.metadata?.userId) {
             return new NextResponse("User ID is missing in metadata", { status: 400 });
@@ -46,16 +46,16 @@ export async function POST(req: Request) {
             stripeSubscriptionId: subscription.id,
             stripeCustomerId: subscription.customer as string,
             stripePriceId: subscription.items.data[0].price.id,
-            stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            stripeCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
         }).where(eq(users.clerkUserId, session.metadata.userId));
     }
 
     if (event.type === "invoice.payment_succeeded") {
-        const subscription = await stripe.subscriptions.retrieve(session.subscription as string) as any;
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
 
         await db.update(users).set({
             stripePriceId: subscription.items.data[0].price.id,
-            stripeCurrentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            stripeCurrentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
         }).where(eq(users.stripeSubscriptionId, subscription.id));
     }
 

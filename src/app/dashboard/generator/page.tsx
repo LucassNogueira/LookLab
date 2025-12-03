@@ -35,7 +35,8 @@ export default function GeneratorPage() {
             const defaultProfile = profiles.find((p: BodyProfile) => p.isDefault === "true") || profiles[0];
             if (defaultProfile) setSelectedProfile(defaultProfile);
         }
-    }, [profiles, selectedProfile]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [profiles]);
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -145,7 +146,7 @@ export default function GeneratorPage() {
 
                     <form onSubmit={handleGenerate} className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">What's the occasion?</label>
+                            <label className="text-sm font-medium">What&apos;s the occasion?</label>
                             <textarea
                                 value={occasion}
                                 onChange={(e) => setOccasion(e.target.value)}
@@ -213,8 +214,8 @@ export default function GeneratorPage() {
                     <div className="p-6 rounded-lg bg-secondary/20 border border-border/50">
                         <h3 className="font-semibold mb-2">Tips for best results:</h3>
                         <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                            <li>Be specific about the weather (e.g., "rainy day")</li>
-                            <li>Mention the vibe (e.g., "professional but comfy")</li>
+                            <li>Be specific about the weather (e.g., &quot;rainy day&quot;)</li>
+                            <li>Mention the vibe (e.g., &quot;professional but comfy&quot;)</li>
                             <li>Specify colors if you have a preference</li>
                         </ul>
                     </div>
@@ -227,7 +228,7 @@ export default function GeneratorPage() {
                             <div className="p-6 rounded-xl bg-purple-500/10 border border-purple-500/20">
                                 <h3 className="text-lg font-semibold text-purple-300 mb-2 flex items-center gap-2">
                                     <Sparkles className="w-5 h-5" />
-                                    Stylist's Choice
+                                    Stylist&apos;s Choice
                                 </h3>
                                 <p className="text-foreground/90 leading-relaxed">
                                     {result.selection.reasoning}

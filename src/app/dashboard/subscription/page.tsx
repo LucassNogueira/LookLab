@@ -102,10 +102,10 @@ export default function SubscriptionPage() {
                             return (
                                 <div
                                     key={key}
-                                    className={`p-6 rounded-xl border-2 transition-all ${isCurrent
-                                            ? "border-purple-500 bg-purple-500/10"
-                                            : "border-border bg-secondary/20 hover:border-purple-500/50"
-                                        }`}
+                                    className={`p - 6 rounded - xl border - 2 transition - all ${isCurrent
+                                        ? "border-purple-500 bg-purple-500/10"
+                                        : "border-border bg-secondary/20 hover:border-purple-500/50"
+                                        } `}
                                 >
                                     <div className="flex items-center justify-between mb-4">
                                         <h3 className="text-xl font-bold">{tier.name}</h3>
@@ -146,12 +146,12 @@ export default function SubscriptionPage() {
                                                 toast.info("Please use the Manage Subscription button to change plans.");
                                             }
                                         }}
-                                        className={`w-full py-3 rounded-lg font-medium transition-all ${isCurrent
-                                                ? "bg-secondary text-muted-foreground cursor-not-allowed"
-                                                : isUpgrade
-                                                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90"
-                                                    : "bg-secondary text-foreground hover:bg-secondary/80"
-                                            }`}
+                                        className={`w - full py - 3 rounded - lg font - medium transition - all ${isCurrent
+                                            ? "bg-secondary text-muted-foreground cursor-not-allowed"
+                                            : isUpgrade
+                                                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90"
+                                                : "bg-secondary text-foreground hover:bg-secondary/80"
+                                            } `}
                                     >
                                         {isCurrent
                                             ? "Current Plan"

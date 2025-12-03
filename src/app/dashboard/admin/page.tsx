@@ -6,7 +6,7 @@ import { Calculator, TrendingUp, DollarSign, Users, Zap, AlertCircle, Crown, Shi
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useAllUsers, useUpdateUserRole, useUpdateUserTier, useMakeCurrentUserAdmin } from "@/hooks/use-admin";
+import { useAllUsers, useUpdateUserRole, useUpdateUserTier } from "@/hooks/use-admin";
 import { useSubscriptionInfo } from "@/hooks/use-user";
 import type { Role, SubscriptionTier } from "@/types";
 
@@ -21,24 +21,26 @@ export default function AdminPage() {
     // Mutation hooks
     const updateUserRoleMutation = useUpdateUserRole();
     const updateUserTierMutation = useUpdateUserTier();
-    const makeAdminMutation = useMakeCurrentUserAdmin();
 
     const isAdmin = subscriptionInfo?.role === "admin";
 
-    // Redirect if not logged in
+    // Redirect if not logged in or not admin
     useEffect(() => {
-        if (isLoaded && !user) {
-            router.push("/dashboard");
+        if (isLoaded) {
+            if (!user) {
+                router.push("/dashboard");
+            } else if (subscriptionInfo && subscriptionInfo.role !== "admin") {
+                router.push("/dashboard");
+            }
         }
-    }, [isLoaded, user, router]);
+    }, [isLoaded, user, subscriptionInfo, router]);
 
     // Current usage data (based on user's $0.56 spent)
     const [currentSpend, setCurrentSpend] = useState(0.56);
 
     // Calculator inputs
     const [userCount, setUserCount] = useState(100);
-    const [outfitsPerUserPerMonth, setOutfitsPerUserPerMonth] = useState(10);
-    const [tryOnsPerUserPerMonth, setTryOnsPerUserPerMonth] = useState(5);
+    const [dailyGenerationsPerUser, setDailyGenerationsPerUser] = useState(1); // Combined outfit + try-on
 
     // ACTUAL Gemini API Pricing (as of Dec 2024) - UPDATED TO MATCH YOUR MODELS
     const PRICING = {
@@ -63,16 +65,19 @@ export default function AdminPage() {
 
     // Calculate cost per user per month
     const calculateCostPerUser = () => {
+        // Assume 1 outfit generation + 1 try-on per "generation" flow
+        const generationsPerMonth = dailyGenerationsPerUser * 30;
+
         // Text generation cost (outfit selection)
-        const outfitInputTokens = outfitsPerUserPerMonth * TOKENS_PER_OPERATION.outfitGeneration.input;
-        const outfitOutputTokens = outfitsPerUserPerMonth * TOKENS_PER_OPERATION.outfitGeneration.output;
+        const outfitInputTokens = generationsPerMonth * TOKENS_PER_OPERATION.outfitGeneration.input;
+        const outfitOutputTokens = generationsPerMonth * TOKENS_PER_OPERATION.outfitGeneration.output;
 
         const textCost =
             (outfitInputTokens / 1_000_000) * PRICING.textInputPer1M +
             (outfitOutputTokens / 1_000_000) * PRICING.textOutputPer1M;
 
         // Image generation cost (try-on)
-        const imageCost = tryOnsPerUserPerMonth * PRICING.imageGeneration;
+        const imageCost = generationsPerMonth * PRICING.imageGeneration;
 
         return textCost + imageCost;
     };
@@ -91,35 +96,6 @@ export default function AdminPage() {
     return (
         <div className="max-w-6xl mx-auto space-y-8">
             {/* Non-Admin User - Setup */}
-            {!isAdmin && user && (
-                <div className="p-8 rounded-xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/20">
-                    <div className="flex items-start gap-4">
-                        <Crown className="w-12 h-12 text-yellow-400 flex-shrink-0" />
-                        <div className="flex-1">
-                            <h2 className="text-2xl font-bold mb-2">Admin Access Required</h2>
-                            <p className="text-muted-foreground mb-4">
-                                This page is only accessible to administrators. If you're the first user or the app owner,
-                                you can set yourself as an admin.
-                            </p>
-                            <div className="p-4 rounded-lg bg-background/50 mb-4">
-                                <p className="text-sm font-medium mb-2">Your Account:</p>
-                                <p className="text-sm text-muted-foreground">{user.emailAddresses[0]?.emailAddress}</p>
-                                <p className="text-xs text-muted-foreground mt-1 font-mono">{user.id}</p>
-                            </div>
-                            <button
-                                onClick={() => makeAdminMutation.mutate()}
-                                disabled={makeAdminMutation.isPending}
-                                className="px-6 py-3 rounded-lg bg-gradient-to-r from-yellow-600 to-orange-600 text-white font-medium hover:opacity-90 disabled:opacity-50 transition-all"
-                            >
-                                {makeAdminMutation.isPending ? "Setting up..." : "Make Me Admin"}
-                            </button>
-                            <p className="text-xs text-muted-foreground mt-3">
-                                Note: This only works if no admins exist yet, or if you're already an admin.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
 
 
             {/* Admin Dashboard Content */}
@@ -185,27 +161,16 @@ export default function AdminPage() {
                                 />
                             </div>
 
-                            {/* Outfits per user */}
+                            {/* Daily Generations per user */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Outfits/User/Month</label>
+                                <label className="text-sm font-medium">Daily Generations/User</label>
                                 <input
                                     type="number"
-                                    value={outfitsPerUserPerMonth}
-                                    onChange={(e) => setOutfitsPerUserPerMonth(Number(e.target.value))}
+                                    value={dailyGenerationsPerUser}
+                                    onChange={(e) => setDailyGenerationsPerUser(Number(e.target.value))}
                                     className="w-full px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 focus:ring-indigo-500 outline-none"
                                     min="0"
-                                />
-                            </div>
-
-                            {/* Try-ons per user */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Try-Ons/User/Month</label>
-                                <input
-                                    type="number"
-                                    value={tryOnsPerUserPerMonth}
-                                    onChange={(e) => setTryOnsPerUserPerMonth(Number(e.target.value))}
-                                    className="w-full px-4 py-2 rounded-lg bg-background border border-border focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    min="0"
+                                    step="0.1"
                                 />
                             </div>
                         </div>
@@ -334,12 +299,12 @@ export default function AdminPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="p-4 rounded-lg bg-background/50 space-y-2">
                                 <h4 className="font-semibold text-indigo-400">Small App (100 users)</h4>
-                                <p className="text-sm text-muted-foreground">10 outfits + 5 try-ons per user/month</p>
+                                <p className="text-sm text-muted-foreground">1 generation per day</p>
                                 <p className="text-2xl font-bold">${(100 * calculateCostPerUser()).toFixed(2)}/mo</p>
                             </div>
                             <div className="p-4 rounded-lg bg-background/50 space-y-2">
                                 <h4 className="font-semibold text-purple-400">Medium App (1,000 users)</h4>
-                                <p className="text-sm text-muted-foreground">10 outfits + 5 try-ons per user/month</p>
+                                <p className="text-sm text-muted-foreground">1 generation per day</p>
                                 <p className="text-2xl font-bold">${(1000 * calculateCostPerUser()).toFixed(2)}/mo</p>
                             </div>
                         </div>

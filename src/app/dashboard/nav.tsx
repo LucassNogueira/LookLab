@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 import { Shirt, Sparkles, LayoutGrid, User, FlaskConical, Calculator, Crown, BarChart3 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
+import type { Role } from "@/types";
 
-export function DashboardNav({ userImage }: { userImage?: string | null }) {
+export function DashboardNav({ userImage, userRole }: { userImage?: string | null; userRole?: Role }) {
     const pathname = usePathname();
 
     const links = [
@@ -51,9 +52,12 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
             href: "/dashboard/admin",
             label: "Admin",
             mobileLabel: "Admin",
-            icon: Calculator
+            icon: Calculator,
+            adminOnly: true
         }
     ];
+
+    const filteredLinks = links.filter(link => !link.adminOnly || userRole === "admin");
 
     const isActive = (path: string, exact = false) => {
         if (exact) return pathname === path;
@@ -71,7 +75,7 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
                 </div>
 
                 <nav className="flex flex-col gap-2">
-                    {links.map((link) => (
+                    {filteredLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
@@ -101,7 +105,7 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
 
             {/* Mobile Bottom Navigation */}
             <nav className="md:hidden fixed bottom-0 inset-x-0 bg-background/80 backdrop-blur-lg border-t border-border flex justify-around p-4 z-50">
-                {links.map((link) => (
+                {filteredLinks.map((link) => (
                     <Link
                         key={link.href}
                         href={link.href}
