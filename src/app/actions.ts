@@ -156,22 +156,31 @@ export async function generateOutfit(data: { occasion: string }) {
     // Shuffle items to prevent bias towards the first items in the list
     const shuffledItems = [...closetItems].sort(() => Math.random() - 0.5);
 
+    // Convert items to CSV format (TOON - Token-Oriented Object Notation)
+    // Format: id,category,subCategory,description
+    const csvHeader = "id,cat,sub,desc";
+    const csvRows = shuffledItems.map(i => {
+        // Sanitize fields to remove commas or newlines that might break CSV
+        const clean = (str: string | undefined | null) => (str || "").replace(/,/g, " ").replace(/\n/g, " ").trim();
+        return `${i.id},${clean(i.category)},${clean(i.subCategory)},${clean(i.description)}`;
+    }).join("\n");
+
     const prompt = `
-    You are a creative personal stylist. 
-    ABSOLUTELY DO NOT ADD ANYTHING THAT IS NOT IN THE "Available Closet Items" list. OR YOU WILL KILL ME!
-    You are creative but not funny, your goal is to create the best outfit for the occasion.
+    You are a creative personal stylist.
+    
+    Task: Select the best outfit for the occasion using the available items.
     Occasion: "${data.occasion}"
     
-    Available Closet Items (JSON):
-    ${JSON.stringify(shuffledItems.map(i => ({ id: i.id, category: i.category, subCategory: i.subCategory, description: i.description })))}
+    Available Closet Items (CSV Format):
+    ${csvHeader}
+    ${csvRows}
     
-    STRICT RULE: You must ONLY select items from the "Available Closet Items" list above. Do NOT invent or suggest any items that are not in this list.
+    STRICT RULES:
+    1. You must ONLY select items from the provided CSV list. Do NOT invent items.
+    2. Do NOT add accessories/watches unless they are in the list.
+    3. Be creative! Create a stylish combination.
     
-    Select the best outfit for this occasion using the available items.
-    IMPORTANT: Be creative! Don't just pick the most obvious items. Try to create a unique and stylish combination.
-    ABSOLUTELY DO NOT ADD ANYTHING THAT IS NOT IN THE "Available Closet Items" list. OR YOU WILL GET A BAD GRADE!
-    DO NOT ADD WATCHES OR ANY ACCESSORIES TO THE OUTFIT UNLESS IT IS IN THE "Available Closet Items" list.
-    Return ONLY a JSON object with the following structure:
+    Return ONLY a JSON object with this structure:
     {
       "selectedItemIds": ["id1", "id2", ...],
       "reasoning": "Why this outfit works..."
