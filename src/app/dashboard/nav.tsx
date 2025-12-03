@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Shirt, Sparkles, LayoutGrid, User, FlaskConical, Calculator, Crown } from "lucide-react";
+import { Shirt, Sparkles, LayoutGrid, User, FlaskConical, Calculator, Crown, BarChart3 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +40,12 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
             label: "Account",
             mobileLabel: "Account",
             icon: User
+        },
+        {
+            href: "/dashboard/analytics",
+            label: "Analytics",
+            mobileLabel: "Stats",
+            icon: BarChart3
         },
         {
             href: "/dashboard/admin",
@@ -81,7 +87,6 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
                         </Link>
                     ))}
                 </nav>
-
             </aside>
 
             {/* Mobile Top Bar */}

@@ -9,6 +9,7 @@ export const SUBSCRIPTION_TIERS = {
             "Access to all clothing categories",
             "Virtual try-on included",
         ],
+        stripePriceId: "",
     },
     basic: {
         name: "Basic",
@@ -21,6 +22,7 @@ export const SUBSCRIPTION_TIERS = {
             "Virtual try-on included",
             "Priority support",
         ],
+        stripePriceId: process.env.STRIPE_PRICE_ID_BASIC || "", // Add your Basic Price ID here or in .env
     },
     pro: {
         name: "Pro",
@@ -34,6 +36,7 @@ export const SUBSCRIPTION_TIERS = {
             "Priority support",
             "Early access to new features",
         ],
+        stripePriceId: process.env.STRIPE_PRICE_ID_PRO || "", // Add your Pro Price ID here or in .env
     },
     admin: {
         name: "Admin",
@@ -45,6 +48,7 @@ export const SUBSCRIPTION_TIERS = {
             "Full admin access",
             "All features included",
         ],
+        stripePriceId: "",
     },
 } as const;
 

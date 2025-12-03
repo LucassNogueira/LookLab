@@ -5,9 +5,10 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2, Upload, X, Camera } from "lucide-react";
 import { saveClothingItems } from "@/app/actions";
 import { CLOTHING_CATEGORIES, SUBCATEGORIES, ClothingCategory } from "@/lib/clothing-constants";
+import { CameraCapture } from "@/components/camera-capture";
 
 type DraftItem = {
     id: string;
@@ -22,6 +23,7 @@ export default function UploadPage() {
     const router = useRouter();
     const [drafts, setDrafts] = useState<DraftItem[]>([]);
     const [isSaving, setIsSaving] = useState(false);
+    const [showCamera, setShowCamera] = useState(false);
 
     const { startUpload } = useUploadThing("clothingImage", {
         onClientUploadComplete: async (res) => {
@@ -66,6 +68,19 @@ export default function UploadPage() {
         setDrafts((prev) => [...prev, ...newDrafts]);
     };
 
+    const handleCameraCapture = (file: File) => {
+        const newDraft: DraftItem = {
+            id: Math.random().toString(36).substring(7),
+            file,
+            previewUrl: URL.createObjectURL(file),
+            category: "top",
+            subCategory: "",
+            description: "",
+        };
+        setDrafts((prev) => [...prev, newDraft]);
+        setShowCamera(false);
+    };
+
     const updateDraft = (id: string, updates: Partial<DraftItem>) => {
         setDrafts(prev => prev.map(d => d.id === id ? { ...d, ...updates } : d));
     };
@@ -84,6 +99,13 @@ export default function UploadPage() {
 
     return (
         <div className="max-w-4xl mx-auto space-y-8 pb-20">
+            {showCamera && (
+                <CameraCapture
+                    onCapture={handleCameraCapture}
+                    onClose={() => setShowCamera(false)}
+                />
+            )}
+
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold">Add New Items</h1>
@@ -92,18 +114,30 @@ export default function UploadPage() {
             </div>
 
             {/* Upload Area */}
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-secondary/20 transition-colors relative">
-                <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleFileSelect}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="w-8 h-8" />
-                    <p>Click to select photos (or drag & drop)</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-secondary/20 transition-colors relative flex flex-col items-center justify-center min-h-[200px]">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleFileSelect}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                        <Upload className="w-8 h-8" />
+                        <p>Select Photos</p>
+                    </div>
                 </div>
+
+                <button
+                    onClick={() => setShowCamera(true)}
+                    className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-secondary/20 transition-colors flex flex-col items-center justify-center min-h-[200px] text-muted-foreground"
+                >
+                    <div className="flex flex-col items-center gap-2">
+                        <Camera className="w-8 h-8" />
+                        <p>Take Photo</p>
+                    </div>
+                </button>
             </div>
 
             {/* Drafts List */}
@@ -193,10 +227,14 @@ export default function UploadPage() {
                         {isSaving ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                Saving {drafts.length} items...
+                                <span className="hidden sm:inline">Saving {drafts.length} items...</span>
+                                <span className="sm:hidden">Saving...</span>
                             </>
                         ) : (
-                            `Save ${drafts.length} Items`
+                            <>
+                                <span className="hidden sm:inline">Save {drafts.length} Items</span>
+                                <span className="sm:hidden">Save ({drafts.length})</span>
+                            </>
                         )}
                     </button>
                 </div>
