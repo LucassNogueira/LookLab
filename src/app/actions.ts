@@ -133,6 +133,14 @@ export async function generateOutfit(data: { occasion: string }) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
+    // Check usage limits
+    const { checkGenerationLimit, incrementGenerations } = await import("./actions/user-actions");
+    const limitCheck = await checkGenerationLimit();
+
+    if (!limitCheck.canGenerate) {
+        throw new Error(`You've reached your monthly limit of outfit generations. Upgrade your plan to continue!`);
+    }
+
     // 1. Fetch user's closet
     const closetItems = await db.query.clothingItems.findMany({
         where: eq(clothingItems.userId, userId),
@@ -353,6 +361,10 @@ export async function saveOutfit(data: {
         generatedImageUrl: data.generatedImageUrl,
         itemsUsed: data.itemsUsed,
     });
+
+    // Increment usage counter after successful generation
+    const { incrementGenerations } = await import("./actions/user-actions");
+    await incrementGenerations();
 
     revalidatePath("/dashboard/generator");
 }

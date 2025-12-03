@@ -6,9 +6,12 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useBodyProfiles } from "@/hooks/use-body-profiles";
 import { useOutfits, useGenerateOutfit, useGenerateTryOn, useSaveOutfit, useDeleteOutfit } from "@/hooks/use-outfits";
+import { UsageIndicator } from "@/components/usage-indicator";
+import { getSubscriptionInfo } from "@/app/actions/user-actions";
 
 export default function GeneratorPage() {
     const [occasion, setOccasion] = useState("");
+    const [subscriptionInfo, setSubscriptionInfo] = useState<any>(null);
     const [result, setResult] = useState<{
         selection: {
             reasoning: string;
@@ -37,6 +40,11 @@ export default function GeneratorPage() {
             if (defaultProfile) setSelectedProfile(defaultProfile);
         }
     }, [profiles, selectedProfile]);
+
+    // Load subscription info
+    useEffect(() => {
+        getSubscriptionInfo().then(setSubscriptionInfo);
+    }, []);
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -81,6 +89,10 @@ export default function GeneratorPage() {
                     generatedImageUrl,
                     itemsUsed: items.map(i => i.id)
                 });
+
+                // Refresh subscription info to update usage counter
+                const updatedInfo = await getSubscriptionInfo();
+                setSubscriptionInfo(updatedInfo);
             }
             if (generationError) {
                 setTryOnError(generationError);
@@ -132,6 +144,15 @@ export default function GeneratorPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 {/* Input Section */}
                 <div className="lg:col-span-4 space-y-6">
+                    {/* Usage Indicator */}
+                    {subscriptionInfo && (
+                        <UsageIndicator
+                            used={subscriptionInfo.generationsUsed}
+                            limit={subscriptionInfo.generationsLimit}
+                            tier={subscriptionInfo.tierName}
+                        />
+                    )}
+
                     <form onSubmit={handleGenerate} className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-sm font-medium">What's the occasion?</label>

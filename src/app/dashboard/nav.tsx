@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Shirt, Sparkles, LayoutGrid, User, FlaskConical, Calculator } from "lucide-react";
+import { Shirt, Sparkles, LayoutGrid, User, FlaskConical, Calculator, Crown } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +28,18 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
             label: "Add Item",
             mobileLabel: "Add",
             icon: Shirt
+        },
+        {
+            href: "/dashboard/subscription",
+            label: "Subscription",
+            mobileLabel: "Plan",
+            icon: Crown
+        },
+        {
+            href: "/dashboard/account",
+            label: "Account",
+            mobileLabel: "Account",
+            icon: User
         },
         {
             href: "/dashboard/admin",
@@ -70,20 +82,6 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
                     ))}
                 </nav>
 
-                <div className="mt-auto">
-                    <Link
-                        href="/dashboard/account"
-                        className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-md transition-colors",
-                            isActive("/dashboard/account")
-                                ? "bg-secondary/50 text-foreground"
-                                : "text-muted-foreground hover:bg-secondary/30 hover:text-foreground"
-                        )}
-                    >
-                        <UserButton afterSignOutUrl="/" />
-                        <span className="text-sm">My Account</span>
-                    </Link>
-                </div>
             </aside>
 
             {/* Mobile Top Bar */}
@@ -113,28 +111,6 @@ export function DashboardNav({ userImage }: { userImage?: string | null }) {
                         {link.mobileLabel || link.label}
                     </Link>
                 ))}
-
-                <Link
-                    href="/dashboard/account"
-                    className={cn(
-                        "flex flex-col items-center gap-1 text-xs transition-colors",
-                        isActive("/dashboard/account")
-                            ? "text-foreground font-medium"
-                            : "text-muted-foreground hover:text-foreground"
-                    )}
-                >
-                    <div className={cn(
-                        "w-6 h-6 rounded-full overflow-hidden border relative",
-                        isActive("/dashboard/account") ? "border-foreground" : "border-border"
-                    )}>
-                        {userImage ? (
-                            <Image src={userImage} alt="Me" fill className="object-cover" />
-                        ) : (
-                            <div className="w-full h-full bg-secondary flex items-center justify-center text-[10px]">Me</div>
-                        )}
-                    </div>
-                    Account
-                </Link>
             </nav>
         </>
     );
