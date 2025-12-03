@@ -1,21 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Check, Crown, Zap } from "lucide-react";
-import { getSubscriptionInfo } from "@/app/actions/user-actions";
+import { useSubscriptionInfo } from "@/hooks/use-user";
 import { SUBSCRIPTION_TIERS } from "@/lib/subscription-tiers";
 import { UsageIndicator } from "@/components/usage-indicator";
 
 export default function SubscriptionPage() {
-    const [subscriptionInfo, setSubscriptionInfo] = useState<any>(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        getSubscriptionInfo().then((info) => {
-            setSubscriptionInfo(info);
-            setIsLoading(false);
-        });
-    }, []);
+    const { data: subscriptionInfo, isLoading } = useSubscriptionInfo();
 
     if (isLoading) {
         return (
@@ -87,8 +78,8 @@ export default function SubscriptionPage() {
                                     <div
                                         key={key}
                                         className={`p-6 rounded-xl border-2 transition-all ${isCurrent
-                                                ? "border-purple-500 bg-purple-500/10"
-                                                : "border-border bg-secondary/20 hover:border-purple-500/50"
+                                            ? "border-purple-500 bg-purple-500/10"
+                                            : "border-border bg-secondary/20 hover:border-purple-500/50"
                                             }`}
                                     >
                                         <div className="flex items-center justify-between mb-4">
@@ -123,10 +114,10 @@ export default function SubscriptionPage() {
                                         <button
                                             disabled={isCurrent}
                                             className={`w-full py-3 rounded-lg font-medium transition-all ${isCurrent
-                                                    ? "bg-secondary text-muted-foreground cursor-not-allowed"
-                                                    : isUpgrade
-                                                        ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90"
-                                                        : "bg-secondary text-foreground hover:bg-secondary/80"
+                                                ? "bg-secondary text-muted-foreground cursor-not-allowed"
+                                                : isUpgrade
+                                                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90"
+                                                    : "bg-secondary text-foreground hover:bg-secondary/80"
                                                 }`}
                                         >
                                             {isCurrent

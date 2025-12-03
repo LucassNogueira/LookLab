@@ -4,10 +4,11 @@ import { db } from "@/db";
 import { users, usageTracking } from "@/db/schema";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { eq, and } from "drizzle-orm";
-import { SUBSCRIPTION_TIERS, type SubscriptionTier, canGenerate, getRemainingGenerations } from "@/lib/subscription-tiers";
+import { SUBSCRIPTION_TIERS, canGenerate, getRemainingGenerations } from "@/lib/subscription-tiers";
+import type { User, UsageTracking, SubscriptionInfo, SubscriptionTier, Role } from "@/types";
 
 // Get or create user in our database
-export async function getOrCreateUser() {
+export async function getOrCreateUser(): Promise<User> {
     const { userId: clerkUserId } = await auth();
     if (!clerkUserId) throw new Error("Unauthorized");
 
@@ -22,7 +23,7 @@ export async function getOrCreateUser() {
         .limit(1);
 
     if (existingUser.length > 0) {
-        return existingUser[0];
+        return existingUser[0] as User;
     }
 
     // Create new user
@@ -36,11 +37,15 @@ export async function getOrCreateUser() {
         })
         .returning();
 
-    return newUser[0];
+    return newUser[0] as User;
 }
 
 // Get current month's usage for a user
-export async function getUserUsage() {
+export async function getUserUsage(): Promise<{
+    user: User;
+    usage: UsageTracking;
+    tier: typeof SUBSCRIPTION_TIERS[keyof typeof SUBSCRIPTION_TIERS];
+}> {
     const user = await getOrCreateUser();
     const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
@@ -68,14 +73,14 @@ export async function getUserUsage() {
 
         return {
             user,
-            usage: newUsage[0],
+            usage: newUsage[0] as UsageTracking,
             tier: SUBSCRIPTION_TIERS[user.subscriptionTier as SubscriptionTier],
         };
     }
 
     return {
         user,
-        usage: usage[0],
+        usage: usage[0] as UsageTracking,
         tier: SUBSCRIPTION_TIERS[user.subscriptionTier as SubscriptionTier],
     };
 }
@@ -100,7 +105,7 @@ export async function checkGenerationLimit(): Promise<{
 }
 
 // Increment generation counter
-export async function incrementGenerations() {
+export async function incrementGenerations(): Promise<void> {
     const { user, usage } = await getUserUsage();
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -119,15 +124,15 @@ export async function incrementGenerations() {
 }
 
 // Get user's subscription info
-export async function getSubscriptionInfo() {
+export async function getSubscriptionInfo(): Promise<SubscriptionInfo> {
     const { user, usage, tier } = await getUserUsage();
 
     return {
-        tier: user.role === "admin" ? "admin" : user.subscriptionTier,
+        tier: user.role === "admin" ? "admin" : (user.subscriptionTier as SubscriptionTier),
         tierName: user.role === "admin" ? "Admin" : tier.name,
         generationsUsed: usage.generationsUsed,
         generationsLimit: user.role === "admin" ? Infinity : tier.generationsPerMonth,
         remaining: user.role === "admin" ? Infinity : tier.generationsPerMonth - usage.generationsUsed,
-        role: user.role,
+        role: user.role as Role,
     };
 }

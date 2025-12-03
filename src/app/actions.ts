@@ -22,7 +22,7 @@ export async function saveClothingItem(data: {
         userId,
         imageUrl: data.imageUrl,
         category: data.category,
-        subCategory: data.subCategory as any, // Cast to any to bypass strict enum check on client input, DB will validate
+        subCategory: data.subCategory,
         description: data.description,
     });
 
@@ -45,7 +45,7 @@ export async function saveClothingItems(items: {
             userId,
             imageUrl: item.imageUrl,
             category: item.category,
-            subCategory: item.subCategory as any,
+            subCategory: item.subCategory,
             description: item.description,
         }))
     );
@@ -209,7 +209,7 @@ import sharp from "sharp";
 // ...
 
 export async function generateTryOn(data: {
-    items: any[],
+    items: { id: string; imageUrl: string }[],
     bodyImageUrl: string
 }) {
     let generatedImageUrl = null;
@@ -250,7 +250,7 @@ export async function generateTryOn(data: {
         const limitedItems = data.items.slice(0, 10);
 
         const itemImagesBase64 = await Promise.all(
-            limitedItems.map(async (item: any) => {
+            limitedItems.map(async (item) => {
                 try {
                     return await fetchImageAsBase64(item.imageUrl);
                 } catch (e) {
@@ -307,9 +307,10 @@ export async function generateTryOn(data: {
             try {
                 imageResult = await imageModel.generateContent(newImageParts);
                 break; // Success
-            } catch (err: any) {
+            } catch (err) {
                 attempts++;
-                if (err.message?.includes("429") || err.message?.includes("Quota exceeded")) {
+                const error = err as Error;
+                if (error.message?.includes("429") || error.message?.includes("Quota exceeded")) {
                     if (attempts >= maxAttempts) {
                         console.error("Max retries reached for rate limit.");
                         throw new Error("System is busy (rate limit). Please try again in a minute.");
@@ -320,7 +321,7 @@ export async function generateTryOn(data: {
                     delay *= 2; // Exponential backoff: 2s, 4s, 8s, 16s...
                 } else {
                     console.error("Image generation error:", err);
-                    if (err.cause) console.error("Error cause:", err.cause);
+                    if ((err as Error).cause) console.error("Error cause:", (err as Error).cause);
                     throw err; // Re-throw if not rate limit
                 }
             }
@@ -329,7 +330,7 @@ export async function generateTryOn(data: {
         if (!imageResult) throw new Error("Failed to generate image after retries");
 
         const response = imageResult.response;
-        const imgPart = response.candidates?.[0]?.content?.parts?.find((p: any) => p.inlineData);
+        const imgPart = response.candidates?.[0]?.content?.parts?.find((p) => p.inlineData);
 
         if (imgPart && imgPart.inlineData && imgPart.inlineData.data) {
             generatedImageUrl = `data:${imgPart.inlineData.mimeType || 'image/jpeg'};base64,${imgPart.inlineData.data}`;
@@ -338,10 +339,11 @@ export async function generateTryOn(data: {
             generationError = "The AI generated text instead of an image. This might be due to safety filters or beta limitations. Please try again with different items.";
         }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Failed to generate try-on image:", error);
-        if (error.cause) console.error("Root cause:", error.cause);
-        generationError = error.message || "Unknown error during image generation";
+        const err = error as Error;
+        if (err.cause) console.error("Root cause:", err.cause);
+        generationError = err.message || "Unknown error during image generation";
     }
 
     return { generatedImageUrl, generationError };

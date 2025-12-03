@@ -6,21 +6,15 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useBodyProfiles } from "@/hooks/use-body-profiles";
 import { useOutfits, useGenerateOutfit, useGenerateTryOn, useSaveOutfit, useDeleteOutfit } from "@/hooks/use-outfits";
+import { useSubscriptionInfo } from "@/hooks/use-user";
 import { UsageIndicator } from "@/components/usage-indicator";
-import { getSubscriptionInfo } from "@/app/actions/user-actions";
+import type { BodyProfile, GenerationResult, ClothingItem, Outfit } from "@/types";
 
 export default function GeneratorPage() {
     const [occasion, setOccasion] = useState("");
-    const [subscriptionInfo, setSubscriptionInfo] = useState<any>(null);
-    const [result, setResult] = useState<{
-        selection: {
-            reasoning: string;
-            selectedItemIds: string[];
-        };
-        closetItems: any[];
-    } | null>(null);
+    const [result, setResult] = useState<GenerationResult | null>(null);
 
-    const [selectedProfile, setSelectedProfile] = useState<any>(null);
+    const [selectedProfile, setSelectedProfile] = useState<BodyProfile | null>(null);
     const [tryOnImage, setTryOnImage] = useState<string | null>(null);
     const [tryOnError, setTryOnError] = useState<string | null>(null);
     const [expandedImage, setExpandedImage] = useState<string | null>(null);
@@ -28,6 +22,8 @@ export default function GeneratorPage() {
     // Query hooks
     const { data: profiles = [] } = useBodyProfiles();
     const { data: pastOutfits = [] } = useOutfits();
+    const { data: subscriptionInfo, refetch: refetchSubscription } = useSubscriptionInfo();
+
     const generateOutfitMutation = useGenerateOutfit();
     const generateTryOnMutation = useGenerateTryOn();
     const saveOutfitMutation = useSaveOutfit();
@@ -36,15 +32,10 @@ export default function GeneratorPage() {
     // Select default profile when profiles load
     useEffect(() => {
         if (profiles.length > 0 && !selectedProfile) {
-            const defaultProfile = profiles.find((p: any) => p.isDefault) || profiles[0];
+            const defaultProfile = profiles.find((p: BodyProfile) => p.isDefault === "true") || profiles[0];
             if (defaultProfile) setSelectedProfile(defaultProfile);
         }
     }, [profiles, selectedProfile]);
-
-    // Load subscription info
-    useEffect(() => {
-        getSubscriptionInfo().then(setSubscriptionInfo);
-    }, []);
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -56,19 +47,19 @@ export default function GeneratorPage() {
 
         try {
             const data = await generateOutfitMutation.mutateAsync({ occasion });
-            setResult(data);
+            setResult(data as GenerationResult);
             toast.success("Outfit generated! Select a profile to try it on.");
 
             // Auto-trigger try-on if a profile is selected
             if (selectedProfile) {
                 handleTryOn(data.closetItems, selectedProfile, occasion);
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
         }
     };
 
-    const handleTryOn = async (items: any[], profile: any, currentOccasion: string) => {
+    const handleTryOn = async (items: ClothingItem[], profile: BodyProfile, currentOccasion: string) => {
         if (!items || !profile) return;
 
         setTryOnImage(null);
@@ -91,16 +82,15 @@ export default function GeneratorPage() {
                 });
 
                 // Refresh subscription info to update usage counter
-                const updatedInfo = await getSubscriptionInfo();
-                setSubscriptionInfo(updatedInfo);
+                refetchSubscription();
             }
             if (generationError) {
                 setTryOnError(generationError);
                 toast.error("Try-on generation had issues");
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
-            setTryOnError(error.message);
+            setTryOnError((error as Error).message);
         }
     };
 
@@ -191,7 +181,7 @@ export default function GeneratorPage() {
                                 Select Model
                             </h3>
                             <div className="grid grid-cols-3 gap-2">
-                                {profiles.map((profile) => (
+                                {profiles.map((profile: BodyProfile) => (
                                     <button
                                         key={profile.id}
                                         onClick={() => {
@@ -340,7 +330,7 @@ export default function GeneratorPage() {
                         <div className="space-y-6 pt-8 border-t border-border">
                             <h2 className="text-2xl font-bold">Past Outfits</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {pastOutfits.map((outfit) => (
+                                {pastOutfits.map((outfit: Outfit) => (
                                     <div key={outfit.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-border bg-secondary/20 cursor-pointer" onClick={() => setExpandedImage(outfit.generatedImageUrl)}>
                                         <Image
                                             src={outfit.generatedImageUrl}

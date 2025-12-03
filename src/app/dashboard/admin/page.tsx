@@ -1,53 +1,36 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { Calculator, TrendingUp, DollarSign, Users, Zap, AlertCircle, Crown, Shield } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { getAllUsers, updateUserRole, updateUserTier } from "@/app/actions/admin-actions";
-import { makeCurrentUserAdmin } from "@/app/actions/setup-admin";
 import { toast } from "sonner";
+import { useAllUsers, useUpdateUserRole, useUpdateUserTier, useMakeCurrentUserAdmin } from "@/hooks/use-admin";
+import { useSubscriptionInfo } from "@/hooks/use-user";
+import type { Role, SubscriptionTier } from "@/types";
 
 export default function AdminPage() {
     const { user, isLoaded } = useUser();
     const router = useRouter();
-    const [allUsers, setAllUsers] = useState<any[]>([]);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [isSettingUpAdmin, setIsSettingUpAdmin] = useState(false);
 
+    // Data fetching hooks
+    const { data: subscriptionInfo, isLoading: isLoadingSubscription } = useSubscriptionInfo();
+    const { data: allUsers = [], isLoading: isLoadingUsers, error: usersError } = useAllUsers();
+
+    // Mutation hooks
+    const updateUserRoleMutation = useUpdateUserRole();
+    const updateUserTierMutation = useUpdateUserTier();
+    const makeAdminMutation = useMakeCurrentUserAdmin();
+
+    const isAdmin = subscriptionInfo?.role === "admin";
+
+    // Redirect if not logged in
     useEffect(() => {
         if (isLoaded && !user) {
             router.push("/dashboard");
         }
-        if (isLoaded && user) {
-            // Try to load all users for admin management
-            getAllUsers()
-                .then((users) => {
-                    setAllUsers(users);
-                    setIsAdmin(true);
-                })
-                .catch(() => {
-                    // Not an admin
-                    setIsAdmin(false);
-                });
-        }
     }, [isLoaded, user, router]);
-
-    const handleMakeAdmin = async () => {
-        setIsSettingUpAdmin(true);
-        try {
-            await makeCurrentUserAdmin();
-            toast.success("You are now an admin!");
-            // Reload users
-            const users = await getAllUsers();
-            setAllUsers(users);
-            setIsAdmin(true);
-        } catch (error: any) {
-            toast.error(error.message);
-        } finally {
-            setIsSettingUpAdmin(false);
-        }
-    };
 
     // Current usage data (based on user's $0.56 spent)
     const [currentSpend, setCurrentSpend] = useState(0.56);
@@ -101,8 +84,43 @@ export default function AdminPage() {
     // Estimate current usage based on spend
     const estimatedCurrentImages = Math.round(currentSpend / PRICING.imageGeneration);
 
+    if (!isLoaded || isLoadingSubscription) {
+        return <div className="p-8 text-center">Loading...</div>;
+    }
+
     return (
         <div className="max-w-6xl mx-auto space-y-8">
+            {/* Non-Admin User - Setup */}
+            {!isAdmin && user && (
+                <div className="p-8 rounded-xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/20">
+                    <div className="flex items-start gap-4">
+                        <Crown className="w-12 h-12 text-yellow-400 flex-shrink-0" />
+                        <div className="flex-1">
+                            <h2 className="text-2xl font-bold mb-2">Admin Access Required</h2>
+                            <p className="text-muted-foreground mb-4">
+                                This page is only accessible to administrators. If you're the first user or the app owner,
+                                you can set yourself as an admin.
+                            </p>
+                            <div className="p-4 rounded-lg bg-background/50 mb-4">
+                                <p className="text-sm font-medium mb-2">Your Account:</p>
+                                <p className="text-sm text-muted-foreground">{user.emailAddresses[0]?.emailAddress}</p>
+                                <p className="text-xs text-muted-foreground mt-1 font-mono">{user.id}</p>
+                            </div>
+                            <button
+                                onClick={() => makeAdminMutation.mutate()}
+                                disabled={makeAdminMutation.isPending}
+                                className="px-6 py-3 rounded-lg bg-gradient-to-r from-yellow-600 to-orange-600 text-white font-medium hover:opacity-90 disabled:opacity-50 transition-all"
+                            >
+                                {makeAdminMutation.isPending ? "Setting up..." : "Make Me Admin"}
+                            </button>
+                            <p className="text-xs text-muted-foreground mt-3">
+                                Note: This only works if no admins exist yet, or if you're already an admin.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
 
             {/* Admin Dashboard Content */}
             {isAdmin && (
@@ -273,16 +291,13 @@ export default function AdminPage() {
                                                 <td className="p-3">
                                                     <select
                                                         value={u.subscriptionTier}
-                                                        onChange={async (e) => {
-                                                            try {
-                                                                await updateUserTier(u.id, e.target.value as any);
-                                                                toast.success("Tier updated");
-                                                                const updated = await getAllUsers();
-                                                                setAllUsers(updated);
-                                                            } catch (error) {
-                                                                toast.error("Failed to update tier");
-                                                            }
+                                                        onChange={(e) => {
+                                                            updateUserTierMutation.mutate({
+                                                                userId: u.id,
+                                                                tier: e.target.value as SubscriptionTier
+                                                            });
                                                         }}
+                                                        disabled={updateUserTierMutation.isPending}
                                                         className="px-2 py-1 rounded bg-background border border-border text-sm"
                                                     >
                                                         <option value="free">Free</option>
@@ -292,17 +307,14 @@ export default function AdminPage() {
                                                 </td>
                                                 <td className="p-3">
                                                     <button
-                                                        onClick={async () => {
+                                                        onClick={() => {
                                                             const newRole = u.role === "admin" ? "user" : "admin";
-                                                            try {
-                                                                await updateUserRole(u.id, newRole);
-                                                                toast.success(`Role updated to ${newRole}`);
-                                                                const updated = await getAllUsers();
-                                                                setAllUsers(updated);
-                                                            } catch (error) {
-                                                                toast.error("Failed to update role");
-                                                            }
+                                                            updateUserRoleMutation.mutate({
+                                                                userId: u.id,
+                                                                role: newRole as Role
+                                                            });
                                                         }}
+                                                        disabled={updateUserRoleMutation.isPending}
                                                         className="px-3 py-1 rounded bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 text-xs font-medium transition-colors"
                                                     >
                                                         {u.role === "admin" ? "Remove Admin" : "Make Admin"}

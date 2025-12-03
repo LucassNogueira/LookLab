@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getClothingItems, deleteClothingItem } from "@/app/actions";
 import { toast } from "sonner";
+import type { ClothingItem } from "@/types";
 
 export function useClothingItems() {
     return useQuery({
@@ -22,13 +23,13 @@ export function useDeleteClothingItem() {
             const previousItems = queryClient.getQueryData(["clothingItems"]);
 
             // Optimistically update
-            queryClient.setQueryData(["clothingItems"], (old: any[]) =>
+            queryClient.setQueryData(["clothingItems"], (old: ClothingItem[] | undefined) =>
                 old?.filter((item) => item.id !== id)
             );
 
             return { previousItems };
         },
-        onError: (error: any, _id, context) => {
+        onError: (error: Error, _id, context) => {
             // Rollback on error
             queryClient.setQueryData(["clothingItems"], context?.previousItems);
             toast.error(error.message || "Failed to delete item");

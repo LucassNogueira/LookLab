@@ -5,9 +5,10 @@ import { users } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import type { User, Role, SubscriptionTier } from "@/types";
 
 // Get all users (admin only)
-export async function getAllUsers() {
+export async function getAllUsers(): Promise<User[]> {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
@@ -23,11 +24,11 @@ export async function getAllUsers() {
     }
 
     const allUsers = await db.select().from(users);
-    return allUsers;
+    return allUsers as User[];
 }
 
 // Update user role (admin only)
-export async function updateUserRole(targetUserId: string, newRole: "admin" | "user") {
+export async function updateUserRole(targetUserId: string, newRole: Role): Promise<void> {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
@@ -53,8 +54,8 @@ export async function updateUserRole(targetUserId: string, newRole: "admin" | "u
 // Update user subscription tier (admin only)
 export async function updateUserTier(
     targetUserId: string,
-    newTier: "free" | "basic" | "pro"
-) {
+    newTier: SubscriptionTier
+): Promise<void> {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 

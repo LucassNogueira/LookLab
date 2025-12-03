@@ -18,7 +18,7 @@ export function useSaveBodyProfile() {
             queryClient.invalidateQueries({ queryKey: ["bodyProfiles"] });
             toast.success("Profile photo added!");
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || "Failed to save profile");
         },
     });
@@ -33,7 +33,7 @@ export function useDeleteBodyProfile() {
             queryClient.invalidateQueries({ queryKey: ["bodyProfiles"] });
             toast.success("Profile deleted");
         },
-        onError: (error: any) => {
+        onError: (error: Error) => {
             toast.error(error.message || "Failed to delete profile");
         },
     });

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { User, Loader2, Upload, Trash2 } from "lucide-react";
 import { useBodyProfiles, useSaveBodyProfile, useDeleteBodyProfile } from "@/hooks/use-body-profiles";
+import type { BodyProfile } from "@/types";
 
 export default function AccountPage() {
     const [processedFile, setProcessedFile] = useState<File | null>(null);
@@ -147,7 +148,7 @@ export default function AccountPage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4">
-                            {profiles.map((profile) => (
+                            {profiles.map((profile: BodyProfile) => (
                                 <div key={profile.id} className="relative group aspect-[3/4] rounded-lg overflow-hidden border border-border bg-secondary/10">
                                     <Image
                                         src={profile.imageUrl || ""}
@@ -158,7 +159,7 @@ export default function AccountPage() {
                                     <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-xs text-white truncate">
                                         {profile.name}
                                     </div>
-                                    {!profile.isDefault && (
+                                    {profile.isDefault !== "true" && (
                                         <button
                                             onClick={() => handleDelete(profile.id)}
                                             className="absolute top-2 right-2 p-2 bg-red-500/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
