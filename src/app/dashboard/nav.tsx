@@ -8,7 +8,7 @@ import { UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import type { Role } from "@/types";
 
-export function DashboardNav({ userImage, userRole }: { userImage?: string | null; userRole?: Role }) {
+export function DashboardNav({ userImage, userRole, showAnalytics }: { userImage?: string | null; userRole?: Role; showAnalytics?: boolean }) {
     const pathname = usePathname();
 
     const links = [
@@ -46,7 +46,8 @@ export function DashboardNav({ userImage, userRole }: { userImage?: string | nul
             href: "/dashboard/analytics",
             label: "Analytics",
             mobileLabel: "Stats",
-            icon: BarChart3
+            icon: BarChart3,
+            featureFlag: "showAnalytics"
         },
         {
             href: "/dashboard/admin",
@@ -57,7 +58,11 @@ export function DashboardNav({ userImage, userRole }: { userImage?: string | nul
         }
     ];
 
-    const filteredLinks = links.filter(link => !link.adminOnly || userRole === "admin");
+    const filteredLinks = links.filter(link => {
+        if (link.adminOnly && userRole !== "admin") return false;
+        if (link.featureFlag === "showAnalytics" && !showAnalytics) return false;
+        return true;
+    });
 
     const isActive = (path: string, exact = false) => {
         if (exact) return pathname === path;

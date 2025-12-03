@@ -102,7 +102,7 @@ export default function SubscriptionPage() {
                             return (
                                 <div
                                     key={key}
-                                    className={`p - 6 rounded - xl border - 2 transition - all ${isCurrent
+                                    className={`p-6 rounded-xl border-2 transition-all flex flex-col h-full ${isCurrent
                                         ? "border-purple-500 bg-purple-500/10"
                                         : "border-border bg-secondary/20 hover:border-purple-500/50"
                                         } `}
@@ -127,7 +127,7 @@ export default function SubscriptionPage() {
                                         {tier.description}
                                     </p>
 
-                                    <ul className="space-y-3 mb-6">
+                                    <ul className="space-y-3 mb-6 flex-1">
                                         {tier.features.map((feature, idx) => (
                                             <li key={idx} className="flex items-start gap-2">
                                                 <Check className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
@@ -146,7 +146,7 @@ export default function SubscriptionPage() {
                                                 toast.info("Please use the Manage Subscription button to change plans.");
                                             }
                                         }}
-                                        className={`w - full py - 3 rounded - lg font - medium transition - all ${isCurrent
+                                        className={`w-full py-3 rounded-lg font-medium transition-all mt-auto ${isCurrent
                                             ? "bg-secondary text-muted-foreground cursor-not-allowed"
                                             : isUpgrade
                                                 ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90"
