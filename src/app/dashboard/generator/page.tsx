@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Sparkles, Shirt, User, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { useBodyProfiles } from "@/hooks/use-body-profiles";
 import { useOutfits, useGenerateOutfit, useGenerateTryOn, useSaveOutfit, useDeleteOutfit } from "@/hooks/use-outfits";
+import { useClothingItems } from "@/hooks/use-clothing-items";
+import { useSearchParams } from "next/navigation";
 import { useSubscriptionInfo } from "@/hooks/use-user";
 import { UsageIndicator } from "@/components/usage-indicator";
+import { ImageExpansionModal } from "./components/ImageExpansionModal/ImageExpansionModal";
+import { PastOutfits } from "./components/PastOutfits/PastOutfits";
 import type { BodyProfile, GenerationResult, ClothingItem, Outfit } from "@/types";
 
 export default function GeneratorPage() {
@@ -22,45 +26,16 @@ export default function GeneratorPage() {
     // Query hooks
     const { data: profiles = [] } = useBodyProfiles();
     const { data: pastOutfits = [] } = useOutfits();
+    const { data: allClothingItems = [] } = useClothingItems(); // Fetch all items to match IDs
     const { data: subscriptionInfo, refetch: refetchSubscription } = useSubscriptionInfo();
 
     const generateOutfitMutation = useGenerateOutfit();
     const generateTryOnMutation = useGenerateTryOn();
     const saveOutfitMutation = useSaveOutfit();
     const deleteOutfitMutation = useDeleteOutfit();
+    const searchParams = useSearchParams();
 
-    // Select default profile when profiles load
-    useEffect(() => {
-        if (profiles.length > 0 && !selectedProfile) {
-            const defaultProfile = profiles.find((p: BodyProfile) => p.isDefault === "true") || profiles[0];
-            if (defaultProfile) setSelectedProfile(defaultProfile);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [profiles]);
-
-    const handleGenerate = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!occasion.trim()) return;
-
-        setResult(null);
-        setTryOnImage(null);
-        setTryOnError(null);
-
-        try {
-            const data = await generateOutfitMutation.mutateAsync({ occasion });
-            setResult(data as GenerationResult);
-            toast.success("Outfit generated! Select a profile to try it on.");
-
-            // Auto-trigger try-on if a profile is selected
-            if (selectedProfile) {
-                handleTryOn(data.closetItems, selectedProfile, occasion);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleTryOn = async (items: ClothingItem[], profile: BodyProfile, currentOccasion: string) => {
+    const handleTryOn = useCallback(async (items: ClothingItem[], profile: BodyProfile, currentOccasion: string) => {
         if (!items || !profile) return;
 
         setTryOnImage(null);
@@ -93,34 +68,87 @@ export default function GeneratorPage() {
             console.error(error);
             setTryOnError((error as Error).message);
         }
+    }, [generateTryOnMutation, saveOutfitMutation, refetchSubscription]);
+
+    // Handle incoming custom outfit from Closet
+    useEffect(() => {
+        const itemIds = searchParams.get("items")?.split(",") || [];
+        const occasionParam = searchParams.get("occasion");
+
+        if (itemIds.length > 0 && allClothingItems.length > 0) {
+            // Case 1: Result not set yet. Set it.
+            if (!result) {
+                const selectedItems = allClothingItems.filter((item: ClothingItem) => itemIds.includes(item.id));
+
+                if (selectedItems.length > 0) {
+                    setOccasion(occasionParam || "Custom Outfit");
+                    const newResult = {
+                        selection: {
+                            selectedItemIds: itemIds,
+                            reasoning: "Here is the outfit you selected from your closet. Ready for try-on!"
+                        },
+                        closetItems: selectedItems
+                    };
+                    setResult(newResult);
+                    toast.success("Custom outfit loaded!");
+
+                    // Try to trigger if profile ready
+                    if (selectedProfile) {
+                        handleTryOn(selectedItems, selectedProfile, occasionParam || "Custom Outfit");
+                    }
+                }
+            }
+            // Case 2: Result is set (presumably by us just now or prev render), but try-on hasn't happened, and profile is now ready.
+            else if (selectedProfile && !tryOnImage && !tryOnError && !generateTryOnMutation.isPending && !generateTryOnMutation.isSuccess) {
+                // Check if current result matches params to avoid auto-triggering for unrelated states
+                const currentIds = result.closetItems.map(i => i.id).sort().join(",");
+                const paramIds = itemIds.sort().join(",");
+
+                if (currentIds === paramIds) {
+                    handleTryOn(result.closetItems, selectedProfile, occasionParam || "Custom Outfit");
+                }
+            }
+        }
+    }, [searchParams, allClothingItems, result, selectedProfile, handleTryOn, tryOnImage, tryOnError, generateTryOnMutation.isPending, generateTryOnMutation.isSuccess]);
+
+    // Select default profile when profiles load
+    useEffect(() => {
+        if (profiles.length > 0 && !selectedProfile) {
+            const defaultProfile = profiles.find((p: BodyProfile) => p.isDefault === "true") || profiles[0];
+            if (defaultProfile) setSelectedProfile(defaultProfile);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [profiles]);
+
+    const handleGenerate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!occasion.trim()) return;
+
+        setResult(null);
+        setTryOnImage(null);
+        setTryOnError(null);
+
+        try {
+            const data = await generateOutfitMutation.mutateAsync({ occasion });
+            setResult(data as GenerationResult);
+            toast.success("Outfit generated! Select a profile to try it on.");
+
+            // Auto-trigger try-on if a profile is selected
+            if (selectedProfile) {
+                handleTryOn(data.closetItems, selectedProfile, occasion);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
         <div className="max-w-6xl mx-auto space-y-12 pb-32">
             {/* Image Expansion Modal */}
-            {expandedImage && (
-                <div
-                    className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200"
-                    onClick={() => setExpandedImage(null)}
-                >
-                    <div className="relative w-full max-w-4xl h-[90vh] animate-in zoom-in-95 duration-200">
-                        <Image
-                            src={expandedImage}
-                            alt="Expanded View"
-                            fill
-                            className="object-contain"
-                            priority
-                        />
-                        <button
-                            onClick={() => setExpandedImage(null)}
-                            className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-white/20 transition-colors"
-                        >
-                            <span className="sr-only">Close</span>
-                            ✕
-                        </button>
-                    </div>
-                </div>
-            )}
+            <ImageExpansionModal
+                imageUrl={expandedImage}
+                onClose={() => setExpandedImage(null)}
+            />
 
             <div>
                 <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -327,41 +355,11 @@ export default function GeneratorPage() {
                     )}
 
                     {/* Past Outfits Section */}
-                    {pastOutfits.length > 0 && (
-                        <div className="space-y-6 pt-8 border-t border-border">
-                            <h2 className="text-2xl font-bold">Past Outfits</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {pastOutfits.map((outfit: Outfit) => (
-                                    <div key={outfit.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-border bg-secondary/20 cursor-pointer" onClick={() => setExpandedImage(outfit.generatedImageUrl)}>
-                                        <Image
-                                            src={outfit.generatedImageUrl}
-                                            alt={outfit.occasion}
-                                            fill
-                                            className="object-cover transition-transform group-hover:scale-105"
-                                        />
-                                        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 to-transparent flex items-end justify-between">
-                                            <div className="flex-1 min-w-0 mr-2">
-                                                <p className="text-white text-sm font-medium line-clamp-2">{outfit.occasion}</p>
-                                                <p className="text-white/60 text-xs mt-1">
-                                                    {new Date(outfit.createdAt).toLocaleDateString()}
-                                                </p>
-                                            </div>
-                                            <button
-                                                onClick={async (e) => {
-                                                    e.stopPropagation();
-                                                    if (!confirm("Delete this outfit?")) return;
-                                                    await deleteOutfitMutation.mutateAsync(outfit.id);
-                                                }}
-                                                className="p-2 bg-red-500/80 text-white rounded-full hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                    <PastOutfits
+                        outfits={pastOutfits}
+                        onExpand={setExpandedImage}
+                        onDelete={(id) => deleteOutfitMutation.mutate(id)}
+                    />
                 </div>
             </div>
         </div>

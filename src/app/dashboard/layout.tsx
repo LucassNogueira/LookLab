@@ -1,4 +1,4 @@
-import { DashboardNav } from "./nav";
+import { DashboardNav } from "./components/dashboard-nav";
 import { getOrCreateUser } from "@/app/actions/user-actions";
 import { currentUser } from "@clerk/nextjs/server";
 import { showAnalytics } from "@/flags";
