@@ -1,3 +1,6 @@
+import React from "react";
+
+// Libraries
 import Link from "next/link";
 import { ArrowRight, Sparkles, Shirt, Camera, Wand2 } from "lucide-react";
 

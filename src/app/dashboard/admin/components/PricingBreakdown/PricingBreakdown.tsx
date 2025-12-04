@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { usePricing, useTokensPerOperation } from "../../atoms";
 
 export function PricingBreakdown() {

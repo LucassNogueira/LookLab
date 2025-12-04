@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { useRef } from "react";
 import { Sparkles, Layers, Shirt, Footprints, Palette } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +12,8 @@ import { useQueryState } from "nuqs";
 import { Slot } from "../../Slot/Slot";
 import { useOutfitSlots } from "../../../atoms";
 import { searchParamsParsers } from "../../../searchParams";
+
+// Types
 import type { ClothingItem } from "@/types";
 import type { OutfitSlots } from "../../../atoms";
 

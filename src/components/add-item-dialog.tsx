@@ -1,14 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useUploadThing } from "@/lib/uploadthing";
-import { toast } from "sonner";
+import React, { useState } from "react";
+
+// Libraries
 import Image from "next/image";
-import { Loader2, Upload, X, Camera } from "lucide-react";
-import { saveClothingItems } from "@/app/actions";
-import { CLOTHING_CATEGORIES, SUBCATEGORIES, ClothingCategory } from "@/lib/clothing-constants";
-import { CameraCapture } from "@/components/camera-capture";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, Upload, X, Camera } from "lucide-react";
+
+// Components
+import { CameraCapture } from "@/components/camera-capture";
+
+// Hooks
+import { useUploadThing } from "@/lib/uploadthing";
+
+// Utils
+import { saveClothingItems } from "@/app/actions";
+import { CLOTHING_CATEGORIES, SUBCATEGORIES } from "@/lib/clothing-constants";
+
+// Types
+import { ClothingCategory } from "@/lib/clothing-constants";
 
 type DraftItem = {
     id: string;
@@ -165,7 +176,7 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                                         {drafts.map((draft) => (
                                             <div key={draft.id} className="flex flex-col md:flex-row gap-6 p-4 rounded-lg border border-border bg-secondary/10">
                                                 {/* Image Preview */}
-                                                <div className="relative w-full md:w-32 aspect-[3/4] rounded-md overflow-hidden bg-white/5 flex-shrink-0 border border-border/50">
+                                                <div className="relative w-full md:w-32 aspect-3/4 rounded-md overflow-hidden bg-white/5 flex-shrink-0 border border-border/50">
                                                     <Image
                                                         src={draft.previewUrl}
                                                         alt="Preview"

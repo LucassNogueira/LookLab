@@ -1,15 +1,20 @@
-
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+
+// Libraries
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryState } from "nuqs";
+import { searchParamsParsers } from "../../searchParams";
+
+// Components
 import { AddItemDialog } from "@/components/add-item-dialog";
 import { ClosetHeader } from "./components/ClosetHeader";
 import { ClosetControls } from "./components/ClosetControls";
 import { OutfitBuilder } from "./components/OutfitBuilder";
 import { ClosetGrid } from "./components/ClosetGrid";
-import { searchParamsParsers } from "../../searchParams";
+
+// Types
 import type { ClothingItem } from "@/types";
 
 export function ClosetView({ items }: { items: ClothingItem[] }) {

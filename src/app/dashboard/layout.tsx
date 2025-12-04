@@ -1,6 +1,13 @@
-import { DashboardNav } from "./components/dashboard-nav";
-import { getOrCreateUser } from "@/app/actions/user-actions";
+import React from "react";
+
+// Libraries
 import { currentUser } from "@clerk/nextjs/server";
+
+// Components
+import { DashboardNav } from "./components/dashboard-nav";
+
+// Utils
+import { getOrCreateUser } from "@/app/actions/user-actions";
 import { showAnalytics } from "@/flags";
 
 export default async function DashboardLayout({

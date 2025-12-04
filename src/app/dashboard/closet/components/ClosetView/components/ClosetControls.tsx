@@ -1,10 +1,15 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { Palette, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useQueryState } from "nuqs";
 import { searchParamsParsers } from "../../../searchParams";
+
+// Utils
+import { cn } from "@/lib/utils";
 
 const CATEGORIES = ["All", "Top", "Bottom", "Shoes", "Accessory", "Outerwear"];
 

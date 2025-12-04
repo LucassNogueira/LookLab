@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect } from "react";
-import { Calculator } from "lucide-react";
+import React, { useEffect } from "react";
+
+// Libraries
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useAllUsers, useUpdateUserRole, useUpdateUserTier } from "./hooks/useAdmin";
-import { useSubscriptionInfo } from "@/hooks/use-user";
+import { Calculator } from "lucide-react";
+
+// Components
 import { UsageStats } from "./components/UsageStats/UsageStats";
 import { CostCalculator } from "./components/CostCalculator/CostCalculator";
 import { PricingBreakdown } from "./components/PricingBreakdown/PricingBreakdown";
 import { UserManagement } from "./components/UserManagement/UserManagement";
 import { Scenarios } from "./components/Scenarios/Scenarios";
+
+// Hooks
+import { useAllUsers, useUpdateUserRole, useUpdateUserTier } from "./hooks/useAdmin";
+import { useSubscriptionInfo } from "@/hooks/use-user";
 
 export default function AdminPage() {
     const { user, isLoaded } = useUser();

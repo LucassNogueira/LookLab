@@ -1,13 +1,19 @@
 "use client";
 
-import { Crown } from "lucide-react";
-import { useSubscriptionInfo } from "@/hooks/use-user";
+import React from "react";
+
+// Libraries
 import { useUser } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
+import { Crown, Loader2 } from "lucide-react";
+
+// Components
 import { UsageIndicator } from "@/components/usage-indicator";
 import { CurrentPlan } from "./components/CurrentPlan/CurrentPlan";
 import { PricingCards } from "./components/PricingCards/PricingCards";
 import { UsageHistory } from "./components/UsageHistory/UsageHistory";
+
+// Hooks
+import { useSubscriptionInfo } from "@/hooks/use-user";
 
 export default function SubscriptionPage() {
     const { data: subscriptionInfo, isLoading: isLoadingSubscription } = useSubscriptionInfo();

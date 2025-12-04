@@ -1,6 +1,12 @@
-import { Loader2 } from "lucide-react";
+"use client";
+
+import React from "react";
+
+// Libraries
 import { useUser } from "@clerk/nextjs";
-import { useSubscriptionInfo } from "@/hooks/use-user";
+import { Loader2 } from "lucide-react";
+
+// Components
 import { ProfileSection } from "./components/ProfileSection/ProfileSection";
 import { BodyProfilesSection } from "./components/BodyProfilesSection/BodyProfilesSection";
 

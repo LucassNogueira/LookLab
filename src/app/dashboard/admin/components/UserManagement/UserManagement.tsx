@@ -1,4 +1,9 @@
+import React from "react";
+
+// Libraries
 import { Shield, Crown } from "lucide-react";
+
+// Types
 import type { User, Role, SubscriptionTier } from "@/types";
 
 interface UserManagementProps {

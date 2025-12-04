@@ -1,3 +1,6 @@
+import React from "react";
+
+// Libraries
 import { Crown } from "lucide-react";
 
 interface CurrentPlanProps {

@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { DollarSign, Zap, TrendingUp } from "lucide-react";
 import { useCurrentSpend, useEstimatedCurrentImages, useImageGenerationCost } from "../../atoms";
 

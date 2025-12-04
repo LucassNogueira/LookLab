@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Camera, X, RefreshCw, Check } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+
+// Libraries
 import { toast } from "sonner";
+import { Camera, X, RefreshCw, Check } from "lucide-react";
 
 interface CameraCaptureProps {
     onCapture: (file: File) => void;

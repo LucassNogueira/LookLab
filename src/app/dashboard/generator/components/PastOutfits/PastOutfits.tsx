@@ -1,5 +1,10 @@
+import React from "react";
+
+// Libraries
 import Image from "next/image";
 import { Trash2 } from "lucide-react";
+
+// Types
 import type { Outfit } from "@/types";
 
 interface PastOutfitsProps {

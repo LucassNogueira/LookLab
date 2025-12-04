@@ -1,8 +1,13 @@
+import React from "react";
+
+// Libraries
+import Link from "next/link";
+import { currentUser } from "@clerk/nextjs/server";
+import { Shirt, Sparkles, Upload, ArrowRight } from "lucide-react";
+
+// Utils
 import { getClothingItems, getOutfits } from "@/app/actions";
 import { getOrCreateUser } from "@/app/actions/user-actions";
-import { currentUser } from "@clerk/nextjs/server";
-import Link from "next/link";
-import { Shirt, Sparkles, Upload, ArrowRight } from "lucide-react";
 
 export default async function DashboardPage() {
     const user = await getOrCreateUser();

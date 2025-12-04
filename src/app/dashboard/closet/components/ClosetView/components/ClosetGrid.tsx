@@ -1,12 +1,21 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import React from "react";
+
+// Libraries
 import { toast } from "sonner";
 import { useQueryState } from "nuqs";
-import { useDeleteClothingItem } from "@/hooks/use-clothing-items";
 import { ItemCard } from "../../ItemCard/ItemCard";
 import { useOutfitSlots } from "../../../atoms";
 import { searchParamsParsers } from "../../../searchParams";
+
+// Hooks
+import { useDeleteClothingItem } from "@/hooks/use-clothing-items";
+
+// Utils
+import { cn } from "@/lib/utils";
+
+// Types
 import type { ClothingItem } from "@/types";
 import type { OutfitSlots } from "../../../atoms";
 

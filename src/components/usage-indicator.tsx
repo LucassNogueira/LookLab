@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { TrendingUp } from "lucide-react";
 
 interface UsageIndicatorProps {

@@ -1,3 +1,6 @@
+import React from "react";
+
+// Libraries
 import { User, Mail, Settings, LogOut } from "lucide-react";
 import Image from "next/image";
 import { useClerk } from "@clerk/nextjs";

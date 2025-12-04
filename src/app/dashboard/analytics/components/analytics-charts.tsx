@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
 interface CategoryData {

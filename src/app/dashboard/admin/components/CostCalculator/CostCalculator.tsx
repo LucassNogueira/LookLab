@@ -1,7 +1,11 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { Users } from "lucide-react";
 import {
+
     useUserCount,
     useDailyGenerations,
     useCostPerUser,

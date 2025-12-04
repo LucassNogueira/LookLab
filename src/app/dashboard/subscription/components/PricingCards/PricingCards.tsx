@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+// Libraries
+import React, { useState } from "react";
 import { Check, Zap } from "lucide-react";
 import { toast } from "sonner";
+
+// Utils
 import { SUBSCRIPTION_TIERS } from "@/lib/subscription-tiers";
 
 interface PricingCardsProps {

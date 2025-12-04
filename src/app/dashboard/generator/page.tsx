@@ -1,17 +1,25 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Sparkles, Shirt, User, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import React, { useState, useEffect, useCallback } from "react";
+
+// Libraries
 import Image from "next/image";
-import { useBodyProfiles } from "@/hooks/use-body-profiles";
-import { useOutfits, useGenerateOutfit, useGenerateTryOn, useSaveOutfit, useDeleteOutfit } from "@/hooks/use-outfits";
-import { useClothingItems } from "@/hooks/use-clothing-items";
 import { useSearchParams } from "next/navigation";
-import { useSubscriptionInfo } from "@/hooks/use-user";
+import { toast } from "sonner";
+import { Sparkles, Shirt, User, Trash2 } from "lucide-react";
+
+// Components
 import { UsageIndicator } from "@/components/usage-indicator";
 import { ImageExpansionModal } from "./components/ImageExpansionModal/ImageExpansionModal";
 import { PastOutfits } from "./components/PastOutfits/PastOutfits";
+
+// Hooks
+import { useBodyProfiles } from "@/hooks/use-body-profiles";
+import { useOutfits, useGenerateOutfit, useGenerateTryOn, useSaveOutfit, useDeleteOutfit } from "@/hooks/use-outfits";
+import { useClothingItems } from "@/hooks/use-clothing-items";
+import { useSubscriptionInfo } from "@/hooks/use-user";
+
+// Types
 import type { BodyProfile, GenerationResult, ClothingItem, Outfit } from "@/types";
 
 export default function GeneratorPage() {

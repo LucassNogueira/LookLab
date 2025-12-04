@@ -1,6 +1,13 @@
+import React from "react";
+
+// Libraries
 import Image from "next/image";
 import { X } from "lucide-react";
+
+// Utils
 import { cn } from "@/lib/utils";
+
+// Types
 import type { ClothingItem } from "@/types";
 
 interface SlotProps {

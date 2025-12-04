@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { Shirt, TrendingUp, DollarSign, Sparkles } from "lucide-react";
 
 interface StatCardProps {

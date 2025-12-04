@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+
+// Libraries
 import { useCostPerUser } from "../../atoms";
 
 export function Scenarios() {

@@ -1,3 +1,6 @@
+import React from "react";
+
+// Libraries
 import Image from "next/image";
 
 interface ImageExpansionModalProps {

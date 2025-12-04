@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
+
+// Libraries
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Shirt, Sparkles, LayoutGrid, Calculator, Crown, BarChart3, Palette, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
+import { Shirt, Sparkles, LayoutGrid, Calculator, Crown, BarChart3, Palette, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+
+// Utils
 import { cn } from "@/lib/utils";
+
+// Types
 import type { Role } from "@/types";
 
 export function DashboardNav({ userImage, userRole, showAnalytics }: { userImage?: string | null; userRole?: Role; showAnalytics?: boolean }) {

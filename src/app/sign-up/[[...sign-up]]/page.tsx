@@ -1,3 +1,6 @@
+import React from "react";
+
+// Libraries
 import { SignUp } from "@clerk/nextjs";
 
 export default function Page() {

@@ -1,10 +1,19 @@
 "use client";
 
+import React from "react";
+
+// Libraries
+import { Loader2, PieChart as PieChartIcon, BarChart3 } from "lucide-react";
+
+// Components
+import { AnalyticsStats } from "@/app/dashboard/analytics/components/analytics-stats";
+import { CategoryPieChart, UsageBarChart } from "@/app/dashboard/analytics/components/analytics-charts";
+
+// Hooks
 import { useClothingItems } from "@/hooks/use-clothing-items";
 import { useOutfits } from "@/hooks/use-outfits";
-import { AnalyticsStats } from "@/components/analytics/analytics-stats";
-import { CategoryPieChart, UsageBarChart } from "@/components/analytics/analytics-charts";
-import { Loader2, PieChart as PieChartIcon, BarChart3 } from "lucide-react";
+
+// Types
 import type { ClothingItem, Outfit } from "@/types";
 
 export default function AnalyticsPage() {
