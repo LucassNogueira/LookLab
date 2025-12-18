@@ -25,8 +25,12 @@ export function ClosetView({ items }: { items: ClothingItem[] }) {
     useEffect(() => {
         if (searchParams.get("action") === "add") {
             setIsAddItemOpen(true);
+            // Remove the action param so it doesn't persist and re-trigger
+            const newParams = new URLSearchParams(searchParams.toString());
+            newParams.delete("action");
+            router.replace(`/dashboard/closet?${newParams.toString()}`);
         }
-    }, [searchParams, setIsAddItemOpen]);
+    }, [searchParams, setIsAddItemOpen, router]);
 
     return (
         <div className="space-y-6">

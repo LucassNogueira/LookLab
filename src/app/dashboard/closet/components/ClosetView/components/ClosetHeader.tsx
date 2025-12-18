@@ -11,10 +11,10 @@ export function ClosetHeader() {
 
     return (
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">My Closet</h1>
+            <h1 className="font-display text-4xl font-bold tracking-tight">My Closet</h1>
             <button
                 onClick={() => setIsAddItemOpen(true)}
-                className="bg-white text-black px-4 py-2 rounded-md font-medium hover:bg-gray-200 transition-colors"
+                className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-bold uppercase tracking-wider hover:opacity-90 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40"
             >
                 + Add New Item
             </button>

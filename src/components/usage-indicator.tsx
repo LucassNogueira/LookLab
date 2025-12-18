@@ -24,7 +24,7 @@ export function UsageIndicator({ used, limit, tier }: UsageIndicatorProps) {
     };
 
     return (
-        <div className="p-4 rounded-xl bg-secondary/20 border border-border">
+        <div className="p-4 rounded-xl bg-secondary/20">
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-muted-foreground" />

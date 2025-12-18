@@ -21,14 +21,14 @@ export function PastOutfits({ outfits, onExpand, onDelete }: PastOutfitsProps) {
             <h2 className="text-2xl font-bold">Past Outfits</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {outfits.map((outfit: Outfit) => (
-                    <div key={outfit.id} className="group relative aspect-[3/4] rounded-xl overflow-hidden border border-border bg-secondary/20 cursor-pointer" onClick={() => onExpand(outfit.generatedImageUrl)}>
+                    <div key={outfit.id} className="group relative aspect-3/4 rounded-xl overflow-hidden border border-border bg-secondary/20 cursor-pointer" onClick={() => onExpand(outfit.generatedImageUrl)}>
                         <Image
                             src={outfit.generatedImageUrl}
                             alt={outfit.occasion}
                             fill
                             className="object-cover transition-transform group-hover:scale-105"
                         />
-                        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 to-transparent flex items-end justify-between">
+                        <div className="absolute inset-x-0 bottom-0 p-3 bg-linear-to-t from-black/90 to-transparent flex items-end justify-between">
                             <div className="flex-1 min-w-0 mr-2">
                                 <p className="text-white text-sm font-medium line-clamp-2">{outfit.occasion}</p>
                                 <p className="text-white/60 text-xs mt-1">

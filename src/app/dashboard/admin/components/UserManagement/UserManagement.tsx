@@ -16,37 +16,37 @@ interface UserManagementProps {
 
 export function UserManagement({ users, onUpdateRole, onUpdateTier, isUpdatingRole, isUpdatingTier }: UserManagementProps) {
     if (users.length === 0) return null;
-
+    d
     return (
-        <div className="p-6 rounded-xl bg-secondary/20 border border-border">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <Shield className="w-6 h-6 text-indigo-400" />
+        <div className="p-8 rounded-2xl bg-card border border-border">
+            <h3 className="font-display text-xl font-bold mb-6 flex items-center gap-3">
+                <Shield className="w-6 h-6 text-primary" />
                 User Management
             </h3>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-xl border border-border">
                 <table className="w-full">
-                    <thead>
-                        <tr className="border-b border-border">
-                            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Email</th>
-                            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Role</th>
-                            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Tier</th>
-                            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Actions</th>
+                    <thead className="bg-secondary/30">
+                        <tr>
+                            <th className="text-left p-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Email</th>
+                            <th className="text-left p-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Role</th>
+                            <th className="text-left p-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Tier</th>
+                            <th className="text-left p-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-border/50">
                         {users.map((u) => (
-                            <tr key={u.id} className="border-b border-border/50">
-                                <td className="p-3 text-sm">{u.email}</td>
-                                <td className="p-3">
-                                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${u.role === "admin"
-                                        ? "bg-yellow-500/20 text-yellow-400"
-                                        : "bg-blue-500/20 text-blue-400"
+                            <tr key={u.id} className="hover:bg-secondary/10 transition-colors">
+                                <td className="p-4 text-sm font-medium">{u.email}</td>
+                                <td className="p-4">
+                                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${u.role === "admin"
+                                        ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                        : "bg-primary/10 text-primary border border-primary/20"
                                         }`}>
                                         {u.role === "admin" && <Crown className="w-3 h-3" />}
                                         {u.role}
                                     </span>
                                 </td>
-                                <td className="p-3">
+                                <td className="p-4">
                                     <select
                                         value={u.subscriptionTier}
                                         onChange={(e) => {
@@ -56,14 +56,14 @@ export function UserManagement({ users, onUpdateRole, onUpdateTier, isUpdatingRo
                                             });
                                         }}
                                         disabled={isUpdatingTier}
-                                        className="px-2 py-1 rounded bg-background border border-border text-sm"
+                                        className="px-3 py-1.5 rounded-lg bg-secondary/30 border border-border text-sm font-medium focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                     >
                                         <option value="free">Free</option>
                                         <option value="basic">Basic</option>
                                         <option value="pro">Pro</option>
                                     </select>
                                 </td>
-                                <td className="p-3">
+                                <td className="p-4">
                                     <button
                                         onClick={() => {
                                             const newRole = u.role === "admin" ? "user" : "admin";
@@ -73,7 +73,7 @@ export function UserManagement({ users, onUpdateRole, onUpdateTier, isUpdatingRo
                                             });
                                         }}
                                         disabled={isUpdatingRole}
-                                        className="px-3 py-1 rounded bg-indigo-500/20 text-indigo-400 hover:bg-indigo-500/30 text-xs font-medium transition-colors"
+                                        className="px-3 py-1.5 rounded-lg bg-secondary/30 text-foreground hover:bg-primary hover:text-primary-foreground text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50"
                                     >
                                         {u.role === "admin" ? "Remove Admin" : "Make Admin"}
                                     </button>

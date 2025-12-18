@@ -50,18 +50,18 @@ export function OutfitBuilder() {
                     exit={{ opacity: 0, x: -20 }}
                     className="lg:w-[35%] flex-none flex flex-col gap-4 overflow-hidden"
                 >
-                    <div className="p-4 rounded-xl bg-secondary/20 border border-border space-y-4 min-w-[300px] sticky top-24">
-                        <div className="flex items-center gap-2">
+                    <div className="p-6 rounded-2xl bg-card/80 backdrop-blur-sm border border-border space-y-6 min-w-[300px] sticky top-24 shadow-2xl">
+                        <div className="flex items-center gap-3">
                             <input
                                 type="text"
                                 placeholder="Occasion (e.g. Date Night)"
                                 value={occasion}
                                 onChange={(e) => setOccasion(e.target.value)}
-                                className="flex-1 px-3 py-2 rounded-md border border-border bg-background text-sm"
+                                className="flex-1 px-4 py-3 rounded-xl border border-border bg-secondary/50 focus:bg-background focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm placeholder:text-muted-foreground/50"
                             />
                             <button
                                 onClick={handleTryOn}
-                                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors text-sm font-medium"
+                                className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:opacity-90 transition-all text-sm font-bold uppercase tracking-wider shadow-lg shadow-primary/20"
                             >
                                 <Sparkles className="w-4 h-4" />
                                 Try On
@@ -71,9 +71,11 @@ export function OutfitBuilder() {
                         {/* The Mannequin / Slots Layout */}
                         <div
                             ref={previewRef}
-                            className="bg-white rounded-lg border border-border p-6 flex flex-col items-center gap-4 shadow-sm"
+                            className="bg-secondary/20 rounded-2xl border border-border/50 p-8 flex flex-col items-center gap-4 relative"
                         >
-                            <div className="flex flex-col gap-4 w-full items-center">
+                            <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent rounded-2xl pointer-events-none" />
+
+                            <div className="flex flex-col gap-4 w-full items-center relative z-10">
                                 <Slot
                                     label="Outerwear"
                                     icon={Layers}
@@ -106,8 +108,8 @@ export function OutfitBuilder() {
                                 />
                             </div>
                         </div>
-                        <p className="text-xs text-center text-muted-foreground">
-                            Click items to add to outfit.
+                        <p className="text-xs text-center text-muted-foreground font-medium uppercase tracking-widest">
+                            Click items in your closet to add to outfit
                         </p>
                     </div>
                 </motion.div>

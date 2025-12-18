@@ -91,7 +91,7 @@ export function BodyProfilesSection() {
 
                     <div className="flex flex-col items-center gap-6">
                         {processedFile ? (
-                            <div className="relative aspect-[3/4] w-full max-w-xs rounded-xl overflow-hidden border border-border shadow-lg group">
+                            <div className="relative aspect-3/4 w-full max-w-xs rounded-xl overflow-hidden border border-border shadow-lg group">
                                 <Image src={URL.createObjectURL(processedFile)} alt="Preview" fill className="object-cover" />
                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button
@@ -131,7 +131,7 @@ export function BodyProfilesSection() {
                         <button
                             onClick={handleSave}
                             disabled={!processedFile || saveProfileMutation.isPending || isConverting || isUploading}
-                            className="w-full max-w-xs px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2"
+                            className="w-full max-w-xs px-6 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2"
                         >
                             {saveProfileMutation.isPending || isUploading ? (
                                 <>
@@ -159,14 +159,14 @@ export function BodyProfilesSection() {
                     ) : (
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                             {profiles.map((profile: BodyProfile) => (
-                                <div key={profile.id} className="relative group aspect-[3/4] rounded-xl overflow-hidden border border-border bg-secondary/10 shadow-sm transition-all hover:shadow-md">
+                                <div key={profile.id} className="relative group aspect-3/4 rounded-xl overflow-hidden border border-border bg-secondary/10 shadow-sm transition-all hover:shadow-md">
                                     <Image
                                         src={profile.imageUrl || ""}
                                         alt={profile.name || "Profile"}
                                         fill
                                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
+                                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-3 pt-8">
                                         <p className="text-xs font-medium text-white truncate">
                                             {profile.name}
                                         </p>

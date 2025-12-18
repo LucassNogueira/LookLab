@@ -1,100 +1,130 @@
-import React from "react";
+"use client";
 
-// Libraries
+import React from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Shirt, Camera, Wand2 } from "lucide-react";
+import { ArrowRight, Shirt, Camera, Wand2, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-background text-foreground overflow-x-hidden">
+    <main className="flex min-h-screen flex-col bg-background text-foreground overflow-x-hidden selection:bg-primary selection:text-primary-foreground">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 font-bold text-xl">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-              LookLab
-            </span>
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2 font-display font-bold text-2xl tracking-tighter">
+            <span className="text-primary">Look</span>Lab
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/sign-in" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex items-center gap-6">
+            <Link href="/sign-in" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors uppercase tracking-wider">
               Sign In
             </Link>
-            <Link href="/sign-up" className="text-sm font-medium px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 transition-colors">
-              Get Started
-            </Link>
+            <Button asChild className="font-bold uppercase tracking-wide">
+              <Link href="/sign-up">Get Started</Link>
+            </Button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-20 md:pt-48 md:pb-20 px-6 overflow-hidden">
-        {/* Background Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl -z-10 pointer-events-none">
-          <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-purple-500/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-blue-500/10 rounded-full blur-[120px]" />
+      <section className="relative pt-32 pb-20 px-6 min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Abstract Background Shapes */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-primary/20 rounded-full blur-[150px] animate-pulse" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-blue-600/10 rounded-full blur-[150px]" />
+          <div className="absolute top-[20%] right-[20%] w-[20vw] h-[20vw] bg-purple-500/10 rounded-full blur-[100px]" />
         </div>
 
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/50 text-sm font-medium animate-fade-in">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-            <span>Your AI Personal Stylist</span>
-          </div>
+        <div className="container mx-auto max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="space-y-8"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest">
+              <Star className="w-3 h-3 fill-current" />
+              <span>The Future of Fashion</span>
+            </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 pb-2">
-            Your Closet, <br /> Reimagined.
-          </h1>
+            <h1 className="font-display text-6xl md:text-8xl font-bold leading-[0.9] tracking-tighter">
+              WEAR <br />
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-green-300">
+                WHAT MATTERS.
+              </span>
+            </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Digitize your wardrobe, generate stunning outfits with AI, and visualize them on your own body before you even open your closet.
-          </p>
+            <p className="text-xl text-muted-foreground max-w-lg leading-relaxed font-light">
+              Stop guessing. Start styling. Digitize your closet and let AI curate your perfect look for every occasion.
+            </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-            <Link
-              href="/dashboard"
-              className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-white px-8 font-medium text-black transition-all duration-300 hover:bg-white/90 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-            >
-              <span className="mr-2">Start Styling</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Button asChild size="lg" className="h-14 px-8 text-base font-bold uppercase tracking-wide rounded-full">
+                <Link href="/sign-up">
+                  Start Styling Now <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-14 px-8 text-base font-bold uppercase tracking-wide rounded-full border-2 hover:bg-secondary/50">
+                <Link href="/pricing">View Pricing</Link>
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Hero Visual / Interface Preview */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="relative z-10"
+          >
+            <div className="relative rounded-3xl border border-white/10 bg-card/50 backdrop-blur-xl p-6 shadow-2xl">
+              {/* Mock UI Card */}
+              <div className="aspect-4/5 md:aspect-square relative overflow-hidden rounded-2xl bg-secondary/30 flex items-center justify-center border border-white/5">
+                <Wand2 className="w-24 h-24 text-primary opacity-50" />
+                <div className="absolute bottom-6 left-6 right-6 p-4 bg-background/80 backdrop-blur-md rounded-xl border border-white/10">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                    <span className="text-xs font-bold uppercase text-muted-foreground">AI Suggestion</span>
+                  </div>
+                  <p className="font-display font-medium text-lg">&quot;Perfect for a rainy coffee date.&quot;</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Pricing CTA Section */}
+      <section className="py-32 bg-secondary/10 relative">
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <h2 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-tight">
+              Simple Plans. <span className="text-primary">Radical Style.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Unlock the full potential of your wardrobe with our flexible pricing tiers.
+            </p>
+            <Button asChild size="lg" className="h-14 px-10 text-base font-bold uppercase tracking-wide rounded-full">
+              <Link href="/pricing">View Plans</Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-secondary/20 border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything you need to look your best</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              LookLab combines advanced AI with intuitive design to revolutionize how you manage your style.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Grid Features */}
+      <section className="py-32 px-6">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
-              {
-                icon: Shirt,
-                title: "Digital Wardrobe",
-                description: "Upload photos of your clothes to create a searchable, organized digital closet accessible from anywhere."
-              },
-              {
-                icon: Wand2,
-                title: "AI Outfit Generator",
-                description: "Get personalized outfit recommendations for any occasion based on your style and weather."
-              },
-              {
-                icon: Camera,
-                title: "Virtual Try-On",
-                description: "See how outfits look on your actual body using our advanced AI visualization technology."
-              }
-            ].map((feature, i) => (
-              <div key={i} className="p-8 rounded-2xl bg-background/50 border border-white/5 hover:border-purple-500/20 transition-colors">
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
-                  <feature.icon className="w-6 h-6 text-purple-400" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+              { icon: Shirt, title: "Digitize", desc: "Snap a photo. We remove the background and tag it automatically." },
+              { icon: Wand2, title: "Generate", desc: "Our AI creates outfits based on weather, occasion, and your taste." },
+              { icon: Camera, title: "Visualize", desc: "See it on you before you wear it. Virtual try-on simplified." }
+            ].map((item, i) => (
+              <div key={i} className="group p-8 rounded-3xl bg-secondary/20 border border-white/5 hover:border-primary/50 transition-colors duration-500">
+                <item.icon className="w-12 h-12 text-primary mb-6 group-hover:scale-110 transition-transform duration-500" />
+                <h3 className="font-display text-2xl font-bold mb-4 uppercase">{item.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  {feature.description}
+                  {item.desc}
                 </p>
               </div>
             ))}
@@ -102,28 +132,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center space-y-8 p-12 rounded-3xl bg-gradient-to-b from-indigo-900/20 to-purple-900/20 border border-white/10 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-grid-white/[0.02] -z-10" />
-
-          <h2 className="text-3xl md:text-4xl font-bold">Ready to upgrade your style?</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of users who are saving time and dressing better with LookLab.
-          </p>
-
-          <Link
-            href="/sign-up"
-            className="inline-flex h-12 items-center justify-center rounded-full bg-white px-8 font-medium text-black transition-all hover:bg-white/90 hover:scale-105"
-          >
-            Get Started for Free
-          </Link>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="py-8 border-t border-white/5 text-center text-sm text-muted-foreground">
-        <p>© {new Date().getFullYear()} LookLab. All rights reserved.</p>
+      <footer className="py-12 border-t border-white/10 bg-background text-center">
+        <div className="container mx-auto px-6">
+          <div className="font-display font-bold text-2xl tracking-tighter mb-4 opacity-50">
+            <span className="text-primary">Look</span>Lab
+          </div>
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} LookLab. Designed for the bold.
+          </p>
+        </div>
       </footer>
     </main>
   );

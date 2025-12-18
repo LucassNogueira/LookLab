@@ -25,64 +25,74 @@ export default async function DashboardPage() {
     ];
 
     return (
-        <div className="space-y-8 pb-20">
+        <div className="space-y-8 pb-20 relative">
+            {/* Background Decoration */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
+
             {/* Welcome Section */}
             <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold">
-                    Welcome back, <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">{displayName}</span>
+                <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+                    Welcome back, <span className="text-primary">{displayName}</span>
                 </h1>
-                <p className="text-muted-foreground">Here's what's happening in your closet.</p>
+                <p className="text-muted-foreground text-lg">Your closet is ready. What&apos;s the vibe today?</p>
             </div>
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Link href="/dashboard/generator" className="group p-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
-                    <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                <Link href="/dashboard/generator" className="group p-6 rounded-2xl bg-primary/10 border border-primary/20 hover:border-primary hover:bg-primary/20 transition-all duration-300 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <Sparkles className="w-32 h-32 text-primary" />
+                    </div>
+                    <div className="flex items-start justify-between mb-8 relative z-10">
+                        <div className="p-3 rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
                             <Sparkles className="w-6 h-6" />
                         </div>
-                        <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ArrowRight className="w-5 h-5 text-primary opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                     </div>
-                    <h3 className="text-xl font-bold mb-1">Generate Outfit</h3>
-                    <p className="text-indigo-100 text-sm">Let AI style you for any occasion</p>
+                    <h3 className="font-display text-xl font-bold mb-1 uppercase tracking-wide">Generate Outfit</h3>
+                    <p className="text-muted-foreground text-sm font-medium">Let AI style you for any occasion</p>
                 </Link>
 
-                <Link href="/dashboard/closet?action=add" className="group p-6 rounded-2xl bg-secondary/50 border border-border hover:border-indigo-500/50 hover:bg-secondary transition-all hover:scale-[1.02]">
-                    <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 rounded-xl bg-background border border-border">
-                            <Upload className="w-6 h-6 text-indigo-500" />
+                <Link href="/dashboard/closet?action=add" className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+                    <div className="flex items-start justify-between mb-8">
+                        <div className="p-3 rounded-xl bg-secondary text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                            <Upload className="w-6 h-6" />
                         </div>
-                        <ArrowRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                     </div>
-                    <h3 className="text-xl font-bold mb-1">Add Clothes</h3>
+                    <h3 className="font-display text-xl font-bold mb-1 uppercase tracking-wide">Add Clothes</h3>
                     <p className="text-muted-foreground text-sm">Upload new items to your wardrobe</p>
                 </Link>
 
-                <Link href="/dashboard/closet" className="group p-6 rounded-2xl bg-secondary/50 border border-border hover:border-purple-500/50 hover:bg-secondary transition-all hover:scale-[1.02]">
-                    <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 rounded-xl bg-background border border-border">
-                            <Shirt className="w-6 h-6 text-purple-500" />
+                <Link href="/dashboard/closet" className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+                    <div className="flex items-start justify-between mb-8">
+                        <div className="p-3 rounded-xl bg-secondary text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                            <Shirt className="w-6 h-6" />
                         </div>
-                        <ArrowRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                     </div>
-                    <h3 className="text-xl font-bold mb-1">View Closet</h3>
+                    <h3 className="font-display text-xl font-bold mb-1 uppercase tracking-wide">View Closet</h3>
                     <p className="text-muted-foreground text-sm">Browse and manage your items</p>
                 </Link>
             </div>
 
             {/* Stats Overview */}
             <div>
-                <h2 className="text-xl font-bold mb-4">Overview</h2>
+                <h2 className="font-display text-2xl font-bold mb-6 uppercase tracking-wide flex items-center gap-2">
+                    <span className="w-2 h-8 bg-primary rounded-full inline-block" />
+                    Overview
+                </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {stats.map((stat) => (
-                        <div key={stat.label} className="p-4 rounded-xl bg-secondary/20 border border-border flex items-center gap-4">
-                            <div className={`p-3 rounded-lg ${stat.bg}`}>
-                                <stat.icon className={`w-5 h-5 ${stat.color}`} />
+                        <div key={stat.label} className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors flex flex-col gap-2">
+                            <div className="flex items-center justify-between mb-2">
+                                <div className={`p-2 rounded-md bg-secondary text-foreground`}>
+                                    <stat.icon className={`w-5 h-5`} />
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-2xl font-bold">{stat.value}</p>
-                                <p className="text-xs text-muted-foreground">{stat.label}</p>
-                            </div>
+
+                            <p className="font-display text-4xl font-bold tracking-tighter">{stat.value}</p>
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{stat.label}</p>
                         </div>
                     ))}
                 </div>

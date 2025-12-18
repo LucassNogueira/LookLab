@@ -1,7 +1,7 @@
 import React from "react";
 
 // Libraries
-import { Inter } from "next/font/google";
+import { Syne, DM_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 
 // Components
@@ -13,7 +13,17 @@ import "./globals.css";
 // Types
 import type { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+const syne = Syne({
+  subsets: ["latin"],
+  variable: '--font-syne',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "LookLab",
@@ -27,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={inter.className}>
+      <body className={`${syne.variable} ${dmSans.variable} font-sans antialiased bg-background text-foreground`}>
         <Providers>
           {children}
           <Toaster position="bottom-center" theme="dark" />

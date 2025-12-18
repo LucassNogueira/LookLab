@@ -125,18 +125,18 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed inset-4 md:inset-auto md:top-[5%] md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-4xl md:h-[90vh] bg-background rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden border border-border"
+                        className="fixed inset-4 md:inset-auto md:top-[5%] md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-4xl md:h-[90vh] bg-background rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-border ring-1 ring-white/10"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b border-border">
-                            <h2 className="text-xl font-bold">Add New Items</h2>
-                            <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full transition-colors">
+                        <div className="flex items-center justify-between p-6 border-b border-border bg-card/50 backdrop-blur-sm">
+                            <h2 className="font-display text-2xl font-bold tracking-tight">Add New Items</h2>
+                            <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full transition-colors text-muted-foreground hover:text-foreground">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
                         {/* Content */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-8">
+                        <div className="flex-1 overflow-y-auto p-8 space-y-8 bg-background/50">
                             {showCamera ? (
                                 <CameraCapture
                                     onCapture={handleCameraCapture}
@@ -146,42 +146,46 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                                 <>
                                     {/* Upload Area */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-secondary/20 transition-colors relative flex flex-col items-center justify-center min-h-[150px]">
+                                        <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:bg-secondary/10 hover:border-primary/50 transition-all relative flex flex-col items-center justify-center min-h-[200px] group cursor-pointer bg-card/20">
                                             <input
                                                 type="file"
                                                 accept="image/*"
                                                 multiple
                                                 onChange={handleFileSelect}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                             />
-                                            <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                                                <Upload className="w-8 h-8" />
-                                                <p>Select Photos</p>
+                                            <div className="flex flex-col items-center gap-4 text-muted-foreground group-hover:text-primary transition-colors">
+                                                <div className="p-4 rounded-full bg-secondary/50 group-hover:bg-primary/10 transition-colors">
+                                                    <Upload className="w-8 h-8" />
+                                                </div>
+                                                <p className="font-medium">Select Photos</p>
                                             </div>
                                         </div>
 
                                         <button
                                             onClick={() => setShowCamera(true)}
-                                            className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-secondary/20 transition-colors flex flex-col items-center justify-center min-h-[150px] text-muted-foreground"
+                                            className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:bg-secondary/10 hover:border-primary/50 transition-all flex flex-col items-center justify-center min-h-[200px] text-muted-foreground hover:text-primary group bg-card/20"
                                         >
-                                            <div className="flex flex-col items-center gap-2">
-                                                <Camera className="w-8 h-8" />
-                                                <p>Take Photo</p>
+                                            <div className="flex flex-col items-center gap-4">
+                                                <div className="p-4 rounded-full bg-secondary/50 group-hover:bg-primary/10 transition-colors">
+                                                    <Camera className="w-8 h-8" />
+                                                </div>
+                                                <p className="font-medium">Take Photo</p>
                                             </div>
                                         </button>
                                     </div>
 
                                     {/* Drafts List */}
-                                    <div className="space-y-6">
+                                    <div className="space-y-4">
                                         {drafts.map((draft) => (
-                                            <div key={draft.id} className="flex flex-col md:flex-row gap-6 p-4 rounded-lg border border-border bg-secondary/10">
+                                            <div key={draft.id} className="flex flex-col md:flex-row gap-6 p-6 rounded-xl border border-border bg-card/40 backdrop-blur-sm hover:border-border/80 transition-colors">
                                                 {/* Image Preview */}
-                                                <div className="relative w-full md:w-32 aspect-3/4 rounded-md overflow-hidden bg-white/5 flex-shrink-0 border border-border/50">
+                                                <div className="relative w-full md:w-32 aspect-3/4 rounded-lg overflow-hidden bg-black/20 flex-shrink-0 border border-border/50">
                                                     <Image
                                                         src={draft.previewUrl}
                                                         alt="Preview"
                                                         fill
-                                                        className="object-contain"
+                                                        className="object-cover"
                                                     />
                                                 </div>
 
@@ -189,11 +193,11 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                                                 <div className="flex-1 space-y-4">
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         <div className="space-y-2">
-                                                            <label className="text-sm font-medium">Category</label>
+                                                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Category</label>
                                                             <select
                                                                 value={draft.category}
                                                                 onChange={(e) => updateDraft(draft.id, { category: e.target.value as ClothingCategory, subCategory: "" })}
-                                                                className="w-full p-2 rounded-md bg-secondary/50 border border-border text-sm"
+                                                                className="w-full px-3 py-2.5 rounded-lg bg-secondary/30 border border-border text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                                             >
                                                                 {CLOTHING_CATEGORIES.map(c => (
                                                                     <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
@@ -202,11 +206,11 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                                                         </div>
 
                                                         <div className="space-y-2">
-                                                            <label className="text-sm font-medium">Subcategory</label>
+                                                            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Subcategory</label>
                                                             <select
                                                                 value={draft.subCategory}
                                                                 onChange={(e) => updateDraft(draft.id, { subCategory: e.target.value })}
-                                                                className="w-full p-2 rounded-md bg-secondary/50 border border-border text-sm"
+                                                                className="w-full px-3 py-2.5 rounded-lg bg-secondary/30 border border-border text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                                             >
                                                                 <option value="">Select...</option>
                                                                 {SUBCATEGORIES[draft.category].map(sc => (
@@ -217,12 +221,12 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                                                     </div>
 
                                                     <div className="space-y-2">
-                                                        <label className="text-sm font-medium">Description</label>
+                                                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Description</label>
                                                         <textarea
                                                             value={draft.description}
                                                             onChange={(e) => updateDraft(draft.id, { description: e.target.value })}
                                                             placeholder="Optional description..."
-                                                            className="w-full p-2 rounded-md bg-secondary/50 border border-border h-16 resize-none text-sm"
+                                                            className="w-full px-3 py-2.5 rounded-lg bg-secondary/30 border border-border h-20 resize-none text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-muted-foreground/50"
                                                         />
                                                     </div>
                                                 </div>
@@ -231,7 +235,7 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                                                 <div>
                                                     <button
                                                         onClick={() => removeDraft(draft.id)}
-                                                        className="p-2 text-muted-foreground hover:text-red-500 transition-colors"
+                                                        className="p-2 text-muted-foreground hover:bg-red-500/10 hover:text-red-500 rounded-lg transition-colors"
                                                     >
                                                         <X className="w-5 h-5" />
                                                     </button>
@@ -244,10 +248,10 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                         </div>
 
                         {/* Footer */}
-                        <div className="p-4 border-t border-border bg-background flex justify-end gap-4">
+                        <div className="p-6 border-t border-border bg-card/50 backdrop-blur-sm flex justify-end gap-3">
                             <button
                                 onClick={onClose}
-                                className="px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                                className="px-5 py-2.5 rounded-xl font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors uppercase tracking-wide text-xs"
                                 disabled={isSaving}
                             >
                                 Cancel
@@ -255,7 +259,7 @@ export function AddItemDialog({ isOpen, onClose, onUploadComplete }: { isOpen: b
                             <button
                                 onClick={handleSaveAll}
                                 disabled={isSaving || drafts.length === 0}
-                                className="px-6 py-2 bg-indigo-600 text-white font-medium rounded-full hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                                className="px-8 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 uppercase tracking-wide text-xs shadow-lg shadow-primary/20"
                             >
                                 {isSaving ? (
                                     <>
