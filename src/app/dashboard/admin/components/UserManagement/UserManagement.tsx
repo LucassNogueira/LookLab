@@ -16,7 +16,6 @@ interface UserManagementProps {
 
 export function UserManagement({ users, onUpdateRole, onUpdateTier, isUpdatingRole, isUpdatingTier }: UserManagementProps) {
     if (users.length === 0) return null;
-    d
     return (
         <div className="p-8 rounded-2xl bg-card border border-border">
             <h3 className="font-display text-xl font-bold mb-6 flex items-center gap-3">
