@@ -12,8 +12,6 @@ import { useState, useRef } from "react";
 import confetti from "canvas-confetti";
 import NumberFlow from "@number-flow/react";
 
-// ... imports
-
 interface PricingPlan {
     name: string;
     price: string;
@@ -87,7 +85,7 @@ export function Pricing({
                 <label className="relative inline-flex items-center cursor-pointer">
                     <Label>
                         <Switch
-                            ref={switchRef as any}
+                            ref={switchRef}
                             checked={!isMonthly}
                             onCheckedChange={handleToggle}
                             className="relative"

@@ -31,7 +31,7 @@ export default function Home() {
         {/* Abstract Background Shapes */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-primary/20 rounded-full blur-[150px] animate-pulse" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-blue-600/10 rounded-full blur-[150px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-primary/10 rounded-full blur-[150px]" />
           <div className="absolute top-[20%] right-[20%] w-[20vw] h-[20vw] bg-primary/20 rounded-full blur-[100px]" />
         </div>
 

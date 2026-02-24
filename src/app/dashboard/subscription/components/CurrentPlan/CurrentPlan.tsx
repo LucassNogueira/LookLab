@@ -12,7 +12,7 @@ export function CurrentPlan({ tierName, role }: CurrentPlanProps) {
     const isAdmin = role === "admin";
 
     return (
-        <div className="p-6 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-border">
+        <div className="p-6 rounded-xl bg-linear-to-br from-primary/10 to-primary/5 border border-border">
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-xl font-bold">Current Plan</h2>

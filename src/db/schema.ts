@@ -9,15 +9,12 @@ export const categoryEnum = pgEnum("category", [
     "outerwear",
 ]);
 
-// Create the subcategory enum from our constants
-// We cast to [string, ...string[]] to satisfy Drizzle's type requirement for at least one value
 export const subCategoryEnum = pgEnum("sub_category_enum", ALL_SUBCATEGORIES as [string, ...string[]]);
 
 export const roleEnum = pgEnum("role", ["admin", "user"]);
 
 export const subscriptionTierEnum = pgEnum("subscription_tier", ["free", "basic", "pro"]);
 
-// Users table - stores user metadata and subscription info
 export const users = pgTable("users", {
     id: uuid("id").defaultRandom().primaryKey(),
     clerkUserId: text("clerk_user_id").notNull().unique(),
@@ -36,7 +33,6 @@ export const users = pgTable("users", {
     };
 });
 
-// Usage tracking table - tracks monthly generation usage
 export const usageTracking = pgTable("usage_tracking", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -53,10 +49,10 @@ export const usageTracking = pgTable("usage_tracking", {
 
 export const clothingItems = pgTable("clothing_items", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id").notNull(), // Clerk User ID
+    userId: text("user_id").notNull(),
     imageUrl: text("image_url").notNull(),
     category: categoryEnum("category").notNull(),
-    subCategory: subCategoryEnum("sub_category"), // Now using the enum
+    subCategory: subCategoryEnum("sub_category"),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => {
@@ -67,10 +63,10 @@ export const clothingItems = pgTable("clothing_items", {
 
 export const bodyProfiles = pgTable("body_profiles", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id").notNull(), // Clerk User ID
+    userId: text("user_id").notNull(),
     imageUrl: text("image_url").notNull(),
     name: text("name").default("My Profile"),
-    isDefault: text("is_default").default("false"), // "true" or "false" (using text for simplicity or boolean if supported)
+    isDefault: text("is_default").default("false"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => {
     return {
@@ -80,10 +76,10 @@ export const bodyProfiles = pgTable("body_profiles", {
 
 export const outfits = pgTable("outfits", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id").notNull(), // Clerk User ID
+    userId: text("user_id").notNull(),
     occasion: text("occasion").notNull(),
     generatedImageUrl: text("generated_image_url").notNull(),
-    itemsUsed: uuid("items_used").array(), // Array of clothing_item IDs
+    itemsUsed: uuid("items_used").array(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => {
     return {
