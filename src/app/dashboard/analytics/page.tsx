@@ -145,18 +145,18 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Insights Section */}
-            <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-border">
+            <div className="p-6 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-border">
                 <h3 className="text-xl font-bold mb-4">💡 Smart Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <h4 className="font-semibold text-purple-400 mb-2">Dust Collectors</h4>
+                        <h4 className="font-semibold text-primary mb-2">Dust Collectors</h4>
                         <p className="text-sm text-muted-foreground">
                             You have <span className="font-bold text-foreground">{dustCollectors}</span> items that haven't been worn yet.
                             Consider creating outfits with them or donating them!
                         </p>
                     </div>
                     <div>
-                        <h4 className="font-semibold text-indigo-400 mb-2">Style Persona</h4>
+                        <h4 className="font-semibold text-primary/80 mb-2">Style Persona</h4>
                         <p className="text-sm text-muted-foreground">
                             Your wardrobe is dominated by <span className="font-bold text-foreground">{categoryData.sort((a, b) => b.value - a.value)[0]?.name || "nothing yet"}</span>.
                             {utilizationRate > 50 ? "You're getting great use out of your clothes!" : "Try to mix and match more to increase your utilization."}

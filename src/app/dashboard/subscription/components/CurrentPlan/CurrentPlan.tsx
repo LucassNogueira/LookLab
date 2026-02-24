@@ -12,11 +12,11 @@ export function CurrentPlan({ tierName, role }: CurrentPlanProps) {
     const isAdmin = role === "admin";
 
     return (
-        <div className="p-6 rounded-xl bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-border">
+        <div className="p-6 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-border">
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-xl font-bold">Current Plan</h2>
-                    <p className="text-2xl font-bold text-purple-400 mt-2">
+                    <p className="text-2xl font-bold text-primary mt-2">
                         {tierName}
                     </p>
                     {isAdmin && (

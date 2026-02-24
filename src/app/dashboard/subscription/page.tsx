@@ -123,7 +123,7 @@ export default function SubscriptionPage() {
     return (
         <div className="max-w-7xl mx-auto space-y-12 pb-20 relative px-4">
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
             <div>
                 <h1 className="font-display text-4xl md:text-5xl font-bold tracking-tight flex items-center gap-3">

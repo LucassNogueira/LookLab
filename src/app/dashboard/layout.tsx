@@ -12,7 +12,6 @@ export default async function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    // Sync user to DB
     const dbUser = await getOrCreateUser();
     const analyticsEnabled = await showAnalytics();
 

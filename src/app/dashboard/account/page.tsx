@@ -25,7 +25,7 @@ export default function AccountPage() {
         <div className="max-w-5xl mx-auto space-y-10 pb-20">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 inline-block">
+                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 inline-block">
                     Account Settings
                 </h1>
                 <p className="text-muted-foreground mt-2">

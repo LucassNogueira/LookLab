@@ -73,7 +73,7 @@ export function BodyProfilesSection() {
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-1">
                 <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                    <Camera className="w-5 h-5 text-purple-500" />
+                    <Camera className="w-5 h-5 text-primary" />
                     Body Profiles
                 </h2>
                 <p className="text-sm text-muted-foreground">
@@ -83,7 +83,7 @@ export function BodyProfilesSection() {
 
             <div className="md:col-span-2 space-y-6">
                 {/* Upload Card */}
-                <div className="p-6 rounded-2xl bg-secondary/20 border border-border border-dashed hover:border-purple-500/50 transition-colors">
+                <div className="p-6 rounded-2xl bg-secondary/20 border border-border border-dashed hover:border-primary/50 transition-colors">
                     <h3 className="font-semibold mb-6 flex items-center gap-2">
                         <Upload className="w-4 h-4" />
                         Add New Profile
@@ -131,7 +131,7 @@ export function BodyProfilesSection() {
                         <button
                             onClick={handleSave}
                             disabled={!processedFile || saveProfileMutation.isPending || isConverting || isUploading}
-                            className="w-full max-w-xs px-6 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md shadow-indigo-500/20 flex items-center justify-center gap-2"
+                            className="w-full max-w-xs px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2"
                         >
                             {saveProfileMutation.isPending || isUploading ? (
                                 <>

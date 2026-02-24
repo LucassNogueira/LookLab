@@ -17,7 +17,7 @@ export function UsageIndicator({ used, limit, tier }: UsageIndicatorProps) {
     const remaining = isUnlimited ? Infinity : Math.max(0, limit - used);
 
     const getColor = () => {
-        if (isUnlimited) return "bg-gradient-to-r from-purple-500 to-indigo-500";
+        if (isUnlimited) return "bg-gradient-to-r from-primary/80 to-primary";
         if (percentage >= 90) return "bg-red-500";
         if (percentage >= 70) return "bg-yellow-500";
         return "bg-green-500";
@@ -35,7 +35,7 @@ export function UsageIndicator({ used, limit, tier }: UsageIndicatorProps) {
 
             {isUnlimited ? (
                 <div className="space-y-2">
-                    <div className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 animate-pulse" />
+                    <div className="h-2 rounded-full bg-gradient-to-r from-primary/80 to-primary animate-pulse" />
                     <p className="text-sm font-medium">Unlimited Generations</p>
                 </div>
             ) : (

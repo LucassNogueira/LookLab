@@ -169,7 +169,7 @@ export function Pricing({
                                 </span>
                                 {plan.period !== "Next 3 months" && (
                                     <span className="text-sm font-semibold leading-6 tracking-wide text-muted-foreground">
-                                        / {plan.period}
+                                        / {plan.period === "per month" ? (isMonthly ? "per month" : "per year") : plan.period}
                                     </span>
                                 )}
                             </div>

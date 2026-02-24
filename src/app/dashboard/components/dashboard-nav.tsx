@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import type { Role } from "@/types";
 
 export function DashboardNav({ userRole, showAnalytics }: { userRole?: Role; showAnalytics?: boolean }) {
+
     const pathname = usePathname();
 
     const links = [

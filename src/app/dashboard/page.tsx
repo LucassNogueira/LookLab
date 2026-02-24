@@ -21,7 +21,7 @@ export default async function DashboardPage() {
 
     const stats = [
         { label: "Total Items", value: items.length, icon: Shirt, color: "text-blue-500", bg: "bg-blue-500/10" },
-        { label: "Outfits Created", value: outfits.length, icon: Sparkles, color: "text-purple-500", bg: "bg-purple-500/10" },
+        { label: "Outfits Created", value: outfits.length, icon: Sparkles, color: "text-primary", bg: "bg-primary/10" },
     ];
 
     return (
